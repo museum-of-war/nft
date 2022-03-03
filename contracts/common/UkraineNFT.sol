@@ -4,13 +4,13 @@ pragma solidity 0.8.4;
 
 // import "../abstract/SafeUpgradable.sol";
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/interfaces/IERC2981.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
 
-contract UkraineNFT is Ownable, ERC721Enumerable, IERC2981 {
+contract UkraineNFT is Ownable, ERC721, IERC2981 {
     using Strings for uint;
 
     string[] urls;
@@ -30,18 +30,25 @@ contract UkraineNFT is Ownable, ERC721Enumerable, IERC2981 {
         charityAddress = _charityAddress;
     }
 
+    function totalSupply() public view returns (uint256) {
+        return indexes.length == 0 ? 0 : indexes[indexes.length - 1];
+    }
+
     function prepareBatch(string memory url, uint count) external onlyOwner {
         urls.push(url);
-        uint prevCount = indexes.length == 0 ? 0 : indexes[indexes.length - 1];
-        indexes.push(prevCount + count);
+        indexes.push(totalSupply() + count);
     }
 
     function changeCharityAddress(address newCharityAddress) external onlyOwner {
         charityAddress = newCharityAddress;
     }
 
+    function changePrice(uint newPrice) external onlyOwner {
+        price = newPrice;
+    }
+
     function mint() external payable returns (uint tokenId) {
-        require(_exists(nextId), "ERC721: minting nonexistent token");
+        require(nextId < totalSupply(), "ERC721: minting nonexistent token");
         require(msg.value >= price, "Not enough ETH");
         tokenId = nextId;
         _safeMint(msg.sender, tokenId);
