@@ -11,9 +11,8 @@ export async function deploy(
   signer: SignerWithAddress
 ): Promise<MuseumOfHistory> {
   const Factory = new MuseumOfHistory__factory(signer);
-  const Proxy = await hre.upgrades.deployProxy(Factory, [signer.address], {
+  const Proxy = await hre.upgrades.deployProxy(Factory, [], {
     kind: "uups",
-    initializer: "init",
   });
   console.log(`NFT deployed at ${Proxy.address}`);
   return Proxy as MuseumOfHistory;

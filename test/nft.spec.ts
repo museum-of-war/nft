@@ -3,33 +3,28 @@ import { ethers, upgrades } from "hardhat";
 import { Contract } from "ethers";
 
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-
+import { MuseumOfHistory, MuseumOfHistory__factory } from "../typechain";
 
 describe("Upgradable NFT controlled through UUPS Proxy", function () {
-//   let owner: SignerWithAddress, other: SignerWithAddress;
-//   let Proxy: Contract;
-//   let ProxyAddress: string;
-//   let ProxyWithOtherSigner: Contract;
+  let owner: SignerWithAddress, other: SignerWithAddress;
+  let NFT: MuseumOfHistory;
+  let ProxyAddress: string;
+  let ProxyWithOtherSigner: Contract;
 
-//   before("Deploy NFT proxied using UUPS Proxy", async () => {
-//     [owner, other] = await ethers.getSigners();
-//     const FactoryV1 = new NFTV1__factory(owner);
+  before("Deploy NFT proxied using UUPS Proxy", async () => {
+    [owner, other] = await ethers.getSigners();
+    const Factory = new MuseumOfHistory__factory(owner);
 
-//     Proxy = await upgrades.deployProxy(FactoryV1, [owner.address], {
-//       kind: "uups",
-//       initializer: "init",
-//     });
-//     ProxyAddress = Proxy.address;
-//     ProxyWithOtherSigner = Proxy.connect(other);
-//   });
+    NFT = await upgrades.deployProxy(Factory, [], {
+      kind: "uups",
+    }) as MuseumOfHistory;
+    ProxyAddress = NFT.address;
+    ProxyWithOtherSigner = NFT.connect(other);
+  });
 
-//   it("Must not support features of any contract differing from current implementation", async () => {
-//     // test that Proxy doesn't support v2 functionality
-//     const ProxyV2 = NFTV2__factory.connect(ProxyAddress, owner);
-//     expect(ProxyV2.val()).to.be.revertedWith(
-//       "function selector was not recognized and there's no fallback function"
-//     );
-//   });
+  it("Vanilla test", async () => {
+    console.log(await NFT.name());
+  });
 
 //   it("Only owner is allowed to call", async () => {
 //     // todo
