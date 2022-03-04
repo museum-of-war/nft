@@ -33,10 +33,10 @@ contract MuseumOfHistory is Initializable, IERC2981Upgradeable, ERC721Upgradeabl
         __Ownable_init();
         __UUPSUpgradeable_init();
         
-        price = 0.15 ether;
+        price = 0.1 ether;
         priceIncreaseIdStep = 50;
         nextPriceIncreaseId = priceIncreaseIdStep;
-        priceStep = 0.05 ether;
+        priceStep = 0.02 ether;
         charityAddress = 0x165CD37b4C644C2921454429E7F9358d18A45e14;
     }
 
@@ -85,13 +85,28 @@ contract MuseumOfHistory is Initializable, IERC2981Upgradeable, ERC721Upgradeabl
         return string(abi.encodePacked(baseURI, tokenId.toString()));
     }
 
+    receive() external payable { }
+
+    fallback() external payable { }
+
     function royaltyInfo(uint256, uint256 salePrice)
     external
     view
     override
     returns (address receiver, uint256 royaltyAmount) {
-        receiver = owner();
-        royaltyAmount = salePrice / 10; //10%
+        receiver = address(this);
+        royaltyAmount = salePrice * 8 / 10; //80%
+    }
+
+    function withdrawEther() external {
+        uint amount = address(this).balance; // 80% of sale price
+
+        uint ownerWithdraw = amount / 8; // 10% of sale price
+        uint charityWithdraw = ownerWithdraw * 7; // 70% of sale price
+
+        (bool success1, ) = payable(owner()).call{value: ownerWithdraw}("");
+        (bool success2, ) = payable(charityAddress).call{value: charityWithdraw}("");
+        require(success1 && success2, "Failed to send Ether");
     }
 
     function _authorizeUpgrade(address newImplementation)
