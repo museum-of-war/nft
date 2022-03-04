@@ -5,7 +5,7 @@ import { Contract } from "ethers";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 
 
-// describe("Upgradable NFT controlled through UUPS Proxy", function () {
+describe("Upgradable NFT controlled through UUPS Proxy", function () {
 //   let owner: SignerWithAddress, other: SignerWithAddress;
 //   let Proxy: Contract;
 //   let ProxyAddress: string;
@@ -67,4 +67,4 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 //     // todo
 //   });
 
-// });
+});
