@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MIT
-
 pragma solidity 0.8.4;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
@@ -29,7 +28,7 @@ contract MuseumOfHistory is Initializable, IERC2981Upgradeable, ERC721Upgradeabl
     constructor() initializer {}
 
     function initialize() initializer public {
-        __ERC721_init("MuseumOfHistory", "MOH");
+        __ERC721_init("Museum of History", "MOH");
         __Ownable_init();
         __UUPSUpgradeable_init();
         
@@ -83,6 +82,26 @@ contract MuseumOfHistory is Initializable, IERC2981Upgradeable, ERC721Upgradeabl
 
         string memory baseURI = urls[index];
         return string(abi.encodePacked(baseURI, tokenId.toString()));
+    }
+
+    function getMintedIntervals() external view returns (string[] memory baseURIs, uint[] memory endsOfIntervals) {
+        uint count = indexes.length;
+        if (nextId == 0) return (new string[](0), new uint[](0));
+        uint mintedArrayIndex;
+        for (uint i = 0; i < count; i++) {
+            if (nextId <= indexes[i]) {
+                mintedArrayIndex = i;
+                break;
+            }
+        }
+        uint mintedArrayLength = mintedArrayIndex + 1;
+        baseURIs = new string[](mintedArrayLength);
+        endsOfIntervals = new uint[](mintedArrayLength);
+        for (uint i = 0; i < mintedArrayLength; i++) {
+            baseURIs[i] = urls[i];
+            endsOfIntervals[i] = indexes[i];
+        }
+        endsOfIntervals[mintedArrayIndex] = nextId;
     }
 
     receive() external payable { }
