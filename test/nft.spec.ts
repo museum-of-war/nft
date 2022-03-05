@@ -132,6 +132,9 @@ describe("Upgradable NFT controlled through UUPS Proxy", function () {
 
      const balance = (await ProxyWithOtherSigner.balanceOf(other.address)).toNumber();
      expect(balance).to.be.equal(1);
+
+     const tokenOwner = await ProxyWithOtherSigner.ownerOf(0);
+     expect(tokenOwner).to.be.equal(other.address);
    });
 
    it("Must return correct tokenURI for minted token", async () => {
@@ -161,6 +164,7 @@ describe("Upgradable NFT controlled through UUPS Proxy", function () {
          expect(tokenURI).to.be.equal(baseURI + tokenId);
        }
      }
+     expect(tokenId).to.be.equal(supply);
    });
 
   it("Must send all ETH to charity address on minted", async () => {
