@@ -33,10 +33,6 @@ describe("Upgradable NFT controlled through UUPS Proxy", function () {
     ProxyWithOtherSigner = NFT.connect(other);
   });
 
-  it("Vanilla test", async () => {
-    console.log(await NFT.name());
-  });
-
 //   it("Only owner is allowed to call", async () => {
 //     // todo
 //   });
@@ -171,5 +167,46 @@ describe("Upgradable NFT controlled through UUPS Proxy", function () {
      }
    });
 
-   //TODO: royaltyInfo, withdrawEther
+  it("Must send all ETH to charity address on minted", async () => {
+    const prevBalance = await charityMock.getBalance();
+
+    const value = await ProxyWithOtherSigner.price();
+
+    await ProxyWithOtherSigner.mint({ value });
+    mintedCount++;
+
+    const newBalance = await charityMock.getBalance();
+
+    const delta = newBalance.sub(prevBalance);
+    expect(delta).to.be.equal(value);
+  });
+
+  it("Must get royaltyInfo and withdraw ETH", async () => {
+    const salePrice = (await ProxyWithOtherSigner.price()).mul(10);
+    const { receiver, royaltyAmount } = await ProxyWithOtherSigner.royaltyInfo(0, salePrice);
+
+    expect(receiver).to.be.equal(NFT.address);
+    expect(royaltyAmount).to.be.equal(salePrice.div(10).mul(8)); // 80%
+
+    await other.sendTransaction({
+      to: receiver,
+      value: royaltyAmount,
+    });
+
+    const ownerPrevBalance = await owner.getBalance();
+    const charityPrevBalance = await charityMock.getBalance();
+
+    const transaction = await NFT.withdrawEther();
+    const receipt = await transaction.wait();
+    const gasFee = receipt.cumulativeGasUsed.mul(receipt.effectiveGasPrice);
+
+    const ownerNewBalance = await owner.getBalance();
+    const charityNewBalance = await charityMock.getBalance();
+
+    const ownerDelta = ownerNewBalance.sub(ownerPrevBalance);
+    const charityDelta = charityNewBalance.sub(charityPrevBalance);
+
+    expect(ownerDelta).to.be.equal(salePrice.div(10).sub(gasFee)); // 10% of sale price minus gas fee
+    expect(charityDelta).to.be.equal(salePrice.div(10).mul(7)); // 70% of sale price
+  });
 });
