@@ -20,7 +20,6 @@ describe("Upgradable NFT controlled through UUPS Proxy", function () {
       count: 5,
     }
   ];
-  let mintedCount = 0;
 
   before("Deploy NFT proxied using UUPS Proxy", async () => {
     [owner, other, charityMock] = await ethers.getSigners();
@@ -75,7 +74,7 @@ describe("Upgradable NFT controlled through UUPS Proxy", function () {
     const tokenURITransaction = NFT.tokenURI(0);
     await expect(tokenURITransaction).to.be.revertedWith("ERC721Metadata: URI query for nonexistent token");
 
-    const { baseURIs, endsOfIntervals } = await NFT.getMintedIntervals();
+    const { baseURIs, endsOfIntervals } = await NFT.getIntervals();
     expect(baseURIs).to.be.empty;
     expect(endsOfIntervals).to.be.empty;
 
@@ -101,16 +100,23 @@ describe("Upgradable NFT controlled through UUPS Proxy", function () {
     await expect(transaction).to.be.revertedWith("Ownable: caller is not the owner");
   });
 
-   it("Must not return tokenURI for unminted tokens", async () => {
-     const supply = (await NFT.totalSupply()).toNumber();
-     expect(supply).to.be.greaterThan(0);
+   it("Must return tokenURI for unminted tokens", async () => {
+     const supply = await NFT.totalSupply();
+     expect(supply.toNumber()).to.be.greaterThan(0);
 
-     const transaction = NFT.tokenURI(0);
+     const tokenURI = await NFT.tokenURI(0);
+     await expect(tokenURI).to.be.not.empty;
+
+     const { baseURIs, endsOfIntervals } = await NFT.getIntervals();
+     expect(baseURIs.length).to.be.equal(endsOfIntervals.length);
+     expect(endsOfIntervals[endsOfIntervals.length - 1]).to.be.equal(supply);
+   });
+
+   it("Must not return tokenURI for nonexistent tokens", async () => {
+     const supply = await NFT.totalSupply();
+
+     const transaction = NFT.tokenURI(supply.add(1));
      await expect(transaction).to.be.revertedWith("ERC721Metadata: URI query for nonexistent token");
-
-     const { baseURIs, endsOfIntervals } = await NFT.getMintedIntervals();
-     expect(baseURIs).to.be.empty;
-     expect(endsOfIntervals).to.be.empty;
    });
 
    it("Must not mint token without ETH", async () => {
@@ -123,10 +129,9 @@ describe("Upgradable NFT controlled through UUPS Proxy", function () {
 
      const transaction = ProxyWithOtherSigner.mint({ value });
      await expect(transaction).to.emit(NFT, "Transfer").withArgs(constants.AddressZero, other.address, 0);
-     mintedCount++;
 
      const balance = (await ProxyWithOtherSigner.balanceOf(other.address)).toNumber();
-     expect(balance).to.be.equal(mintedCount);
+     expect(balance).to.be.equal(1);
    });
 
    it("Must return correct tokenURI for minted token", async () => {
@@ -136,24 +141,15 @@ describe("Upgradable NFT controlled through UUPS Proxy", function () {
      expect(tokenURI).to.be.equal(batchesInfo[0].url + tokenId);
    });
 
-   it("Must get intervals for minted tokens", async () => {
-     const count = batchesInfo[0].count;
-     const value = await ProxyWithOtherSigner.price();
-
-     for (let i = 0; i < count; i++) await ProxyWithOtherSigner.mint({ value });
-     mintedCount += count;
-
-     const balance = (await ProxyWithOtherSigner.balanceOf(other.address)).toNumber();
-     expect(balance).to.be.equal(mintedCount);
-
-     const { baseURIs, endsOfIntervals } = await NFT.getMintedIntervals();
-
-     expect(baseURIs.length).to.be.greaterThan(1);
+   it("Must get intervals for tokens", async () => {
+     const { baseURIs, endsOfIntervals } = await NFT.getIntervals();
      expect(endsOfIntervals.length).to.be.equal(baseURIs.length);
+
      const intervalsCount = baseURIs.length;
 
+     const supply = await NFT.totalSupply();
      const end = endsOfIntervals[intervalsCount - 1];
-     expect(end).to.be.equal(mintedCount);
+     expect(end).to.be.equal(supply);
 
      let tokenId = 0;
      for (let i = 0; i < intervalsCount; i++) {
@@ -173,7 +169,6 @@ describe("Upgradable NFT controlled through UUPS Proxy", function () {
     const value = await ProxyWithOtherSigner.price();
 
     await ProxyWithOtherSigner.mint({ value });
-    mintedCount++;
 
     const newBalance = await charityMock.getBalance();
 

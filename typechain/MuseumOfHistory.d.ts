@@ -27,7 +27,7 @@ interface MuseumOfHistoryInterface extends ethers.utils.Interface {
     "changeCharityAddress(address)": FunctionFragment;
     "charityAddress()": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
-    "getMintedIntervals()": FunctionFragment;
+    "getIntervals()": FunctionFragment;
     "initialize()": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "mint()": FunctionFragment;
@@ -73,7 +73,7 @@ interface MuseumOfHistoryInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "getMintedIntervals",
+    functionFragment: "getIntervals",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -171,7 +171,7 @@ interface MuseumOfHistoryInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getMintedIntervals",
+    functionFragment: "getIntervals",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
@@ -351,7 +351,7 @@ export class MuseumOfHistory extends Contract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    getMintedIntervals(
+    getIntervals(
       overrides?: CallOverrides
     ): Promise<
       [string[], BigNumber[]] & {
@@ -360,7 +360,7 @@ export class MuseumOfHistory extends Contract {
       }
     >;
 
-    "getMintedIntervals()"(
+    "getIntervals()"(
       overrides?: CallOverrides
     ): Promise<
       [string[], BigNumber[]] & {
@@ -624,7 +624,7 @@ export class MuseumOfHistory extends Contract {
     overrides?: CallOverrides
   ): Promise<string>;
 
-  getMintedIntervals(
+  getIntervals(
     overrides?: CallOverrides
   ): Promise<
     [string[], BigNumber[]] & {
@@ -633,7 +633,7 @@ export class MuseumOfHistory extends Contract {
     }
   >;
 
-  "getMintedIntervals()"(
+  "getIntervals()"(
     overrides?: CallOverrides
   ): Promise<
     [string[], BigNumber[]] & {
@@ -891,7 +891,7 @@ export class MuseumOfHistory extends Contract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    getMintedIntervals(
+    getIntervals(
       overrides?: CallOverrides
     ): Promise<
       [string[], BigNumber[]] & {
@@ -900,7 +900,7 @@ export class MuseumOfHistory extends Contract {
       }
     >;
 
-    "getMintedIntervals()"(
+    "getIntervals()"(
       overrides?: CallOverrides
     ): Promise<
       [string[], BigNumber[]] & {
@@ -1196,9 +1196,9 @@ export class MuseumOfHistory extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getMintedIntervals(overrides?: CallOverrides): Promise<BigNumber>;
+    getIntervals(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getMintedIntervals()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "getIntervals()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     initialize(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1457,13 +1457,9 @@ export class MuseumOfHistory extends Contract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getMintedIntervals(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getIntervals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "getMintedIntervals()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    "getIntervals()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     initialize(
       overrides?: Overrides & { from?: string | Promise<string> }

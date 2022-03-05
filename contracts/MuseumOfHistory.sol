@@ -70,7 +70,7 @@ contract MuseumOfHistory is Initializable, IERC2981Upgradeable, ERC721Upgradeabl
     }
 
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
-        require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+        require(tokenId < totalSupply(), "ERC721Metadata: URI query for nonexistent token");
 
         uint index;
         for(uint i = 0; i < indexes.length; i++) {
@@ -84,24 +84,14 @@ contract MuseumOfHistory is Initializable, IERC2981Upgradeable, ERC721Upgradeabl
         return string(abi.encodePacked(baseURI, tokenId.toString()));
     }
 
-    function getMintedIntervals() external view returns (string[] memory baseURIs, uint[] memory endsOfIntervals) {
+    function getIntervals() external view returns (string[] memory baseURIs, uint[] memory endsOfIntervals) {
         uint count = indexes.length;
-        if (nextId == 0) return (new string[](0), new uint[](0));
-        uint mintedArrayIndex;
+        baseURIs = new string[](count);
+        endsOfIntervals = new uint[](count);
         for (uint i = 0; i < count; i++) {
-            if (nextId <= indexes[i]) {
-                mintedArrayIndex = i;
-                break;
-            }
-        }
-        uint mintedArrayLength = mintedArrayIndex + 1;
-        baseURIs = new string[](mintedArrayLength);
-        endsOfIntervals = new uint[](mintedArrayLength);
-        for (uint i = 0; i < mintedArrayLength; i++) {
             baseURIs[i] = urls[i];
             endsOfIntervals[i] = indexes[i];
         }
-        endsOfIntervals[mintedArrayIndex] = nextId;
     }
 
     receive() external payable { }
