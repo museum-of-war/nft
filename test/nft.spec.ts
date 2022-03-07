@@ -2,10 +2,19 @@ import { expect } from "chai";
 import { ethers, upgrades } from "hardhat";
 
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { MuseumOfHistory, MuseumOfHistory__factory } from "../typechain";
+import {
+  MuseumOfHistory,
+  MuseumOfHistory__factory,
+  MuseumOfHistoryUpgradeableTest,
+  MuseumOfHistoryUpgradeableTest__factory,
+} from "../typechain";
 import { constants } from "ethers";
 
 describe("Upgradable NFT controlled through UUPS Proxy", function () {
+  const initialPrice = constants.WeiPerEther.div(10); // 0.1 ether
+  const initialPriceIncreaseIdStep = 50;
+  const initialPriceStep = constants.WeiPerEther.div(50);  // 0.02 ether
+  const initialCharityAddress = "0x165CD37b4C644C2921454429E7F9358d18A45e14";
   let owner: SignerWithAddress, other: SignerWithAddress, charityMock: SignerWithAddress;
   let NFT: MuseumOfHistory;
   let ProxyAddress: string;
@@ -18,6 +27,10 @@ describe("Upgradable NFT controlled through UUPS Proxy", function () {
     {
       url: "https://url2/",
       count: 5,
+    },
+    {
+      url: "https://url_last/",
+      count: 100,
     }
   ];
 
@@ -25,36 +38,50 @@ describe("Upgradable NFT controlled through UUPS Proxy", function () {
     [owner, other, charityMock] = await ethers.getSigners();
     const Factory = new MuseumOfHistory__factory(owner);
 
-    NFT = await upgrades.deployProxy(Factory, [], {
-      kind: "uups",
-    }) as MuseumOfHistory;
+    NFT = await upgrades.deployProxy(Factory,
+        [initialPrice, initialPriceIncreaseIdStep, initialPriceStep, initialCharityAddress],
+        { kind: "uups" }
+    ) as MuseumOfHistory;
     ProxyAddress = NFT.address;
     ProxyWithOtherSigner = NFT.connect(other);
   });
 
-//   it("Only owner is allowed to call", async () => {
-//     // todo
-//   });
+  it("Must be initialized", async () => {
+    expect(await NFT.price()).to.be.equal(initialPrice);
+    expect(await NFT.priceIncreaseIdStep()).to.be.equal(initialPriceIncreaseIdStep);
+    expect(await NFT.priceStep()).to.be.equal(initialPriceStep);
+    expect(await NFT.charityAddress()).to.be.equal(initialCharityAddress);
 
-//   it("Only owner is allowed to upgrade. Proxy address not changed after upgrade", async () => {
-//     const FactoryV2WrongOwner = new NFTV2__factory(other);
+    expect(await NFT.nextPriceIncreaseId()).to.be.equal(initialPriceIncreaseIdStep);
+  });
 
-//     expect(
-//       upgrades.upgradeProxy(Proxy, FactoryV2WrongOwner, { kind: "uups" })
-//     ).to.be.revertedWith("Access denied");
-//     const FactoryV2 = new NFTV2__factory(owner);
-//     const ProxyV2 = await upgrades.upgradeProxy(Proxy, FactoryV2, {
-//       kind: "uups",
-//     });
-//     expect(ProxyV2.address).to.equal(ProxyAddress);
-//     Proxy = ProxyV2;
-//   });
+  it("Only owner is allowed to upgrade. Proxy address not changed after upgrade", async () => {
+    const FactoryV2WrongOwner = new MuseumOfHistoryUpgradeableTest__factory(other);
+    expect(
+        upgrades.upgradeProxy(NFT, FactoryV2WrongOwner, { kind: "uups" })
+    ).to.be.revertedWith("Access denied");
 
-//   it("Must support features of implementation it had upgraded to", async () => {
-//     // test that Proxy supports v2 functionality
-//     const ProxyV2 = NFTV2__factory.connect(ProxyAddress, owner);
-//     expect((await ProxyV2.val()).toNumber()).to.equal(0);
-//   });
+    const FactoryV2 = new MuseumOfHistoryUpgradeableTest__factory(owner);
+    const ProxyV2 = await upgrades.upgradeProxy(NFT, FactoryV2, {
+      kind: "uups",
+    }) as MuseumOfHistoryUpgradeableTest;
+
+    expect(ProxyV2.address).to.equal(ProxyAddress);
+
+    NFT = ProxyV2;
+  });
+
+  it("Must support features of implementation it had upgraded to", async () => {
+    const ProxyV2 = MuseumOfHistoryUpgradeableTest__factory.connect(ProxyAddress, owner);
+
+    const newChangePriceIncreaseIdStep = 5;
+
+    await ProxyV2.changePriceIncreaseIdStep(newChangePriceIncreaseIdStep);
+
+    const changedPriceIncreaseIdStep = await ProxyV2.priceIncreaseIdStep();
+
+    expect(changedPriceIncreaseIdStep.toNumber()).to.equal(newChangePriceIncreaseIdStep);
+  });
 
    it("Must support charity address changing", async () => {
      await NFT.changeCharityAddress(charityMock.address);
@@ -207,5 +234,27 @@ describe("Upgradable NFT controlled through UUPS Proxy", function () {
 
     expect(ownerDelta).to.be.equal(salePrice.div(10).sub(gasFee)); // 10% of sale price minus gas fee
     expect(charityDelta).to.be.equal(salePrice.div(10).mul(7)); // 70% of sale price
+  });
+
+  it("Must increment price after increase step", async () => {
+    const nextPriceIncreaseId = await ProxyWithOtherSigner.nextPriceIncreaseId();
+
+    const value = await ProxyWithOtherSigner.price();
+
+    let mintedCount = (await ProxyWithOtherSigner.nextId()).toNumber();
+
+    for (mintedCount; mintedCount < nextPriceIncreaseId.toNumber(); mintedCount++){
+
+      await ProxyWithOtherSigner.mint({ value });
+    }
+
+    const newNextPriceIncreaseId = await ProxyWithOtherSigner.nextPriceIncreaseId();
+    const newValue = await ProxyWithOtherSigner.price();
+
+    const priceIncreaseIdStep = await ProxyWithOtherSigner.priceIncreaseIdStep();
+    const priceStep = await ProxyWithOtherSigner.priceStep();
+
+    expect(newNextPriceIncreaseId).to.be.equal(nextPriceIncreaseId.add(priceIncreaseIdStep));
+    expect(newValue).to.be.equal(value.add(priceStep));
   });
 });

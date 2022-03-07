@@ -20,11 +20,13 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
-interface MuseumOfHistoryInterface extends ethers.utils.Interface {
+interface MuseumOfHistoryUpgradeableTestInterface
+  extends ethers.utils.Interface {
   functions: {
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "changeCharityAddress(address)": FunctionFragment;
+    "changePriceIncreaseIdStep(uint256)": FunctionFragment;
     "charityAddress()": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "getIntervals()": FunctionFragment;
@@ -64,6 +66,10 @@ interface MuseumOfHistoryInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "changeCharityAddress",
     values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "changePriceIncreaseIdStep",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "charityAddress",
@@ -162,6 +168,10 @@ interface MuseumOfHistoryInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "changeCharityAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "changePriceIncreaseIdStep",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -267,7 +277,7 @@ interface MuseumOfHistoryInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Upgraded"): EventFragment;
 }
 
-export class MuseumOfHistory extends Contract {
+export class MuseumOfHistoryUpgradeableTest extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -308,7 +318,7 @@ export class MuseumOfHistory extends Contract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: MuseumOfHistoryInterface;
+  interface: MuseumOfHistoryUpgradeableTestInterface;
 
   functions: {
     approve(
@@ -337,6 +347,16 @@ export class MuseumOfHistory extends Contract {
 
     "changeCharityAddress(address)"(
       newCharityAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    changePriceIncreaseIdStep(
+      newPriceIncreaseIdStep: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    "changePriceIncreaseIdStep(uint256)"(
+      newPriceIncreaseIdStep: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -625,6 +645,16 @@ export class MuseumOfHistory extends Contract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  changePriceIncreaseIdStep(
+    newPriceIncreaseIdStep: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  "changePriceIncreaseIdStep(uint256)"(
+    newPriceIncreaseIdStep: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   charityAddress(overrides?: CallOverrides): Promise<string>;
 
   "charityAddress()"(overrides?: CallOverrides): Promise<string>;
@@ -901,6 +931,16 @@ export class MuseumOfHistory extends Contract {
 
     "changeCharityAddress(address)"(
       newCharityAddress: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    changePriceIncreaseIdStep(
+      newPriceIncreaseIdStep: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "changePriceIncreaseIdStep(uint256)"(
+      newPriceIncreaseIdStep: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1225,6 +1265,16 @@ export class MuseumOfHistory extends Contract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    changePriceIncreaseIdStep(
+      newPriceIncreaseIdStep: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    "changePriceIncreaseIdStep(uint256)"(
+      newPriceIncreaseIdStep: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     charityAddress(overrides?: CallOverrides): Promise<BigNumber>;
 
     "charityAddress()"(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1493,6 +1543,16 @@ export class MuseumOfHistory extends Contract {
 
     "changeCharityAddress(address)"(
       newCharityAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    changePriceIncreaseIdStep(
+      newPriceIncreaseIdStep: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "changePriceIncreaseIdStep(uint256)"(
+      newPriceIncreaseIdStep: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

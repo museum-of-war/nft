@@ -15,8 +15,8 @@ contract MuseumOfHistory is Initializable, IERC2981Upgradeable, ERC721Upgradeabl
 
     string[] urls;
     uint[] indexes;
-    uint nextId;
 
+    uint public nextId;
     uint public price;
     uint public priceStep;
     uint public priceIncreaseIdStep;
@@ -27,16 +27,21 @@ contract MuseumOfHistory is Initializable, IERC2981Upgradeable, ERC721Upgradeabl
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() initializer {}
 
-    function initialize() initializer public {
+    function initialize(
+        uint initialPrice, // 0.1 ether
+        uint initialPriceIncreaseIdStep, // 50
+        uint initialPriceStep, // 0.02 ether
+        address initialCharityAddress // 0x165CD37b4C644C2921454429E7F9358d18A45e14
+    ) initializer public {
         __ERC721_init("Museum of History", "MOH");
         __Ownable_init();
         __UUPSUpgradeable_init();
-        
-        price = 0.1 ether;
-        priceIncreaseIdStep = 50;
+
+        price = initialPrice;
+        priceIncreaseIdStep = initialPriceIncreaseIdStep;
         nextPriceIncreaseId = priceIncreaseIdStep;
-        priceStep = 0.02 ether;
-        charityAddress = 0x165CD37b4C644C2921454429E7F9358d18A45e14;
+        priceStep = initialPriceStep;
+        charityAddress = initialCharityAddress;
     }
 
     function totalSupply() public view returns (uint256) {

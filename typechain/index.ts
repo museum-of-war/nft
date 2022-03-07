@@ -22,6 +22,7 @@ export type { IERC721Receiver } from "./IERC721Receiver";
 export type { ERC165 } from "./ERC165";
 export type { IERC165 } from "./IERC165";
 export type { MuseumOfHistory } from "./MuseumOfHistory";
+export type { MuseumOfHistoryUpgradeableTest } from "./MuseumOfHistoryUpgradeableTest";
 
 export { OwnableUpgradeable__factory } from "./factories/OwnableUpgradeable__factory";
 export { IERC1822ProxiableUpgradeable__factory } from "./factories/IERC1822ProxiableUpgradeable__factory";
@@ -44,3 +45,4 @@ export { IERC721Receiver__factory } from "./factories/IERC721Receiver__factory";
 export { ERC165__factory } from "./factories/ERC165__factory";
 export { IERC165__factory } from "./factories/IERC165__factory";
 export { MuseumOfHistory__factory } from "./factories/MuseumOfHistory__factory";
+export { MuseumOfHistoryUpgradeableTest__factory } from "./factories/MuseumOfHistoryUpgradeableTest__factory";
