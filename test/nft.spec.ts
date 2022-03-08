@@ -105,7 +105,7 @@ describe("Upgradable NFT controlled through UUPS Proxy", function () {
     expect(baseURIs).to.be.empty;
     expect(endsOfIntervals).to.be.empty;
 
-    const mintTransaction = NFT.mint();
+    const mintTransaction = NFT.mintNext();
     await expect(mintTransaction).to.be.revertedWith("ERC721: minting nonexistent token");
   });
 
@@ -147,14 +147,14 @@ describe("Upgradable NFT controlled through UUPS Proxy", function () {
    });
 
    it("Must not mint token without ETH", async () => {
-     const transaction = ProxyWithOtherSigner.mint();
+     const transaction = ProxyWithOtherSigner.mintNext();
      await expect(transaction).to.be.revertedWith("Not enough ETH");
    });
 
-   it("Must mint token with correct amount of ETH", async () => {
+   it("Must mint next token with correct amount of ETH", async () => {
      const value = await ProxyWithOtherSigner.price();
 
-     const transaction = ProxyWithOtherSigner.mint({ value });
+     const transaction = ProxyWithOtherSigner.mintNext({ value });
      await expect(transaction).to.emit(NFT, "Transfer").withArgs(constants.AddressZero, other.address, 0);
 
      const balance = (await ProxyWithOtherSigner.balanceOf(other.address)).toNumber();
@@ -162,6 +162,28 @@ describe("Upgradable NFT controlled through UUPS Proxy", function () {
 
      const tokenOwner = await ProxyWithOtherSigner.ownerOf(0);
      expect(tokenOwner).to.be.equal(other.address);
+   });
+
+   it("Must mint next token by tokenId with correct amount of ETH", async () => {
+     const nextId = await ProxyWithOtherSigner.nextId();
+     const value = await ProxyWithOtherSigner.price();
+
+     const transaction = ProxyWithOtherSigner.mint(nextId, { value });
+     await expect(transaction).to.emit(NFT, "Transfer").withArgs(constants.AddressZero, other.address, nextId);
+
+     const tokenOwner = await ProxyWithOtherSigner.ownerOf(nextId);
+     expect(tokenOwner).to.be.equal(other.address);
+   });
+
+   it("Must not mint token with wrong tokenId", async () => {
+     const nextId = await ProxyWithOtherSigner.nextId();
+     const value = await ProxyWithOtherSigner.price();
+
+     const transactionPrev = ProxyWithOtherSigner.mint(nextId.sub(1), { value });
+     await expect(transactionPrev).to.be.revertedWith("ERC721: wrong tokenId to mint");
+
+     const transactionNext = ProxyWithOtherSigner.mint(nextId.add(1), { value });
+     await expect(transactionNext).to.be.revertedWith("ERC721: wrong tokenId to mint");
    });
 
    it("Must return correct tokenURI for minted token", async () => {
@@ -174,8 +196,8 @@ describe("Upgradable NFT controlled through UUPS Proxy", function () {
    it("Must get tokens of owner", async () => {
      const tokens = await NFT.getTokensOfOwner(other.address);
 
-     expect(tokens.length).to.be.equal(1);
-     expect(tokens).to.deep.include(BigNumber.from(0));
+     expect(tokens.length).to.be.equal(2);
+     expect(tokens).to.include.deep.members([BigNumber.from(0), BigNumber.from(1)]);
 
      const noTokens = await NFT.getTokensOfOwner(owner.address);
      expect(noTokens).to.be.empty;
@@ -209,7 +231,7 @@ describe("Upgradable NFT controlled through UUPS Proxy", function () {
 
     const value = await ProxyWithOtherSigner.price();
 
-    await ProxyWithOtherSigner.mint({ value });
+    await ProxyWithOtherSigner.mintNext({ value });
 
     const newBalance = await charityMock.getBalance();
 
@@ -254,7 +276,7 @@ describe("Upgradable NFT controlled through UUPS Proxy", function () {
     let mintedCount = (await ProxyWithOtherSigner.nextId()).toNumber();
 
     for (mintedCount; mintedCount < nextPriceIncreaseId.toNumber(); mintedCount++){
-      await ProxyWithOtherSigner.mint({ value });
+      await ProxyWithOtherSigner.mintNext({ value });
     }
 
     const newNextPriceIncreaseId = await ProxyWithOtherSigner.nextPriceIncreaseId();

@@ -31,7 +31,8 @@ interface MuseumOfHistoryInterface extends ethers.utils.Interface {
     "getTokensOfOwner(address)": FunctionFragment;
     "initialize(uint256,uint256,uint256,address)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
-    "mint()": FunctionFragment;
+    "mint(uint256)": FunctionFragment;
+    "mintNext()": FunctionFragment;
     "name()": FunctionFragment;
     "nextId()": FunctionFragment;
     "nextPriceIncreaseId()": FunctionFragment;
@@ -90,7 +91,8 @@ interface MuseumOfHistoryInterface extends ethers.utils.Interface {
     functionFragment: "isApprovedForAll",
     values: [string, string]
   ): string;
-  encodeFunctionData(functionFragment: "mint", values?: undefined): string;
+  encodeFunctionData(functionFragment: "mint", values: [BigNumberish]): string;
+  encodeFunctionData(functionFragment: "mintNext", values?: undefined): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "nextId", values?: undefined): string;
   encodeFunctionData(
@@ -191,6 +193,7 @@ interface MuseumOfHistoryInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "mintNext", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "nextId", data: BytesLike): Result;
   decodeFunctionResult(
@@ -420,10 +423,20 @@ export class MuseumOfHistory extends Contract {
     ): Promise<[boolean]>;
 
     mint(
+      tokenId: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    "mint()"(
+    "mint(uint256)"(
+      tokenId: BigNumberish,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    mintNext(
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    "mintNext()"(
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -715,10 +728,20 @@ export class MuseumOfHistory extends Contract {
   ): Promise<boolean>;
 
   mint(
+    tokenId: BigNumberish,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  "mint()"(
+  "mint(uint256)"(
+    tokenId: BigNumberish,
+    overrides?: PayableOverrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  mintNext(
+    overrides?: PayableOverrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  "mintNext()"(
     overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -1003,9 +1026,16 @@ export class MuseumOfHistory extends Contract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    mint(overrides?: CallOverrides): Promise<BigNumber>;
+    mint(tokenId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
-    "mint()"(overrides?: CallOverrides): Promise<BigNumber>;
+    "mint(uint256)"(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    mintNext(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "mintNext()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
@@ -1321,10 +1351,20 @@ export class MuseumOfHistory extends Contract {
     ): Promise<BigNumber>;
 
     mint(
+      tokenId: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    "mint()"(
+    "mint(uint256)"(
+      tokenId: BigNumberish,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    mintNext(
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    "mintNext()"(
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1604,10 +1644,20 @@ export class MuseumOfHistory extends Contract {
     ): Promise<PopulatedTransaction>;
 
     mint(
+      tokenId: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    "mint()"(
+    "mint(uint256)"(
+      tokenId: BigNumberish,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    mintNext(
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "mintNext()"(
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

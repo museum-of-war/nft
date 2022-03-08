@@ -57,10 +57,9 @@ contract MuseumOfHistory is Initializable, IERC2981Upgradeable, ERC721Upgradeabl
         charityAddress = newCharityAddress;
     }
 
-    function mint() external payable returns (uint tokenId) {
+    function _mintNext() private returns (uint tokenId) {
         require(nextId < totalSupply(), "ERC721: minting nonexistent token");
         require(msg.value >= price, "Not enough ETH");
-        
         tokenId = nextId;
         _safeMint(msg.sender, tokenId);
 
@@ -72,6 +71,15 @@ contract MuseumOfHistory is Initializable, IERC2981Upgradeable, ERC721Upgradeabl
 
         (bool success, ) = payable(charityAddress).call{value: msg.value}("");
         require(success, "Failed to send Ether to charity address");
+    }
+
+    function mint(uint256 tokenId) external payable {
+        require(tokenId == nextId, "ERC721: wrong tokenId to mint");
+        _mintNext();
+    }
+
+    function mintNext() external payable returns (uint tokenId) {
+        return _mintNext();
     }
 
     function getTokensOfOwner(address tokenOwner) external view returns (uint256[] memory tokenIds) {
