@@ -8,7 +8,7 @@ import {
   MuseumOfHistoryUpgradeableTest,
   MuseumOfHistoryUpgradeableTest__factory,
 } from "../typechain";
-import { constants } from "ethers";
+import {BigNumber, constants} from "ethers";
 
 describe("Upgradable NFT controlled through UUPS Proxy", function () {
   const initialPrice = constants.WeiPerEther.div(10); // 0.1 ether
@@ -171,6 +171,16 @@ describe("Upgradable NFT controlled through UUPS Proxy", function () {
      expect(tokenURI).to.be.equal(batchesInfo[0].url + tokenId);
    });
 
+   it("Must get tokens of owner", async () => {
+     const tokens = await NFT.getTokensOfOwner(other.address);
+
+     expect(tokens.length).to.be.equal(1);
+     expect(tokens).to.deep.include(BigNumber.from(0));
+
+     const noTokens = await NFT.getTokensOfOwner(owner.address);
+     expect(noTokens).to.be.empty;
+   });
+
    it("Must get intervals for tokens", async () => {
      const { baseURIs, endsOfIntervals } = await NFT.getIntervals();
      expect(endsOfIntervals.length).to.be.equal(baseURIs.length);
@@ -244,7 +254,6 @@ describe("Upgradable NFT controlled through UUPS Proxy", function () {
     let mintedCount = (await ProxyWithOtherSigner.nextId()).toNumber();
 
     for (mintedCount; mintedCount < nextPriceIncreaseId.toNumber(); mintedCount++){
-
       await ProxyWithOtherSigner.mint({ value });
     }
 

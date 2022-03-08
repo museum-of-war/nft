@@ -74,6 +74,17 @@ contract MuseumOfHistory is Initializable, IERC2981Upgradeable, ERC721Upgradeabl
         require(success, "Failed to send Ether to charity address");
     }
 
+    function getTokensOfOwner(address tokenOwner) external view returns (uint256[] memory tokenIds) {
+        uint count = balanceOf(tokenOwner);
+        tokenIds = new uint256[](count);
+
+        uint length = nextId;
+        uint tokenIndex = 0;
+        for (uint tokenId = 0; tokenId < length && tokenIndex < count; tokenId++) {
+            if (ownerOf(tokenId) == tokenOwner) tokenIds[tokenIndex++] = tokenId;
+        }
+    }
+
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         require(tokenId < totalSupply(), "ERC721Metadata: URI query for nonexistent token");
 

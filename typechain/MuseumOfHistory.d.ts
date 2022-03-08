@@ -28,6 +28,7 @@ interface MuseumOfHistoryInterface extends ethers.utils.Interface {
     "charityAddress()": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "getIntervals()": FunctionFragment;
+    "getTokensOfOwner(address)": FunctionFragment;
     "initialize(uint256,uint256,uint256,address)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "mint()": FunctionFragment;
@@ -76,6 +77,10 @@ interface MuseumOfHistoryInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "getIntervals",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getTokensOfOwner",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
@@ -174,6 +179,10 @@ interface MuseumOfHistoryInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getIntervals",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getTokensOfOwner",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
@@ -371,6 +380,16 @@ export class MuseumOfHistory extends Contract {
         endsOfIntervals: BigNumber[];
       }
     >;
+
+    getTokensOfOwner(
+      tokenOwner: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber[]] & { tokenIds: BigNumber[] }>;
+
+    "getTokensOfOwner(address)"(
+      tokenOwner: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber[]] & { tokenIds: BigNumber[] }>;
 
     initialize(
       initialPrice: BigNumberish,
@@ -657,6 +676,16 @@ export class MuseumOfHistory extends Contract {
     }
   >;
 
+  getTokensOfOwner(
+    tokenOwner: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber[]>;
+
+  "getTokensOfOwner(address)"(
+    tokenOwner: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber[]>;
+
   initialize(
     initialPrice: BigNumberish,
     initialPriceIncreaseIdStep: BigNumberish,
@@ -935,6 +964,16 @@ export class MuseumOfHistory extends Contract {
         endsOfIntervals: BigNumber[];
       }
     >;
+
+    getTokensOfOwner(
+      tokenOwner: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber[]>;
+
+    "getTokensOfOwner(address)"(
+      tokenOwner: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber[]>;
 
     initialize(
       initialPrice: BigNumberish,
@@ -1243,6 +1282,16 @@ export class MuseumOfHistory extends Contract {
 
     "getIntervals()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    getTokensOfOwner(
+      tokenOwner: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "getTokensOfOwner(address)"(
+      tokenOwner: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     initialize(
       initialPrice: BigNumberish,
       initialPriceIncreaseIdStep: BigNumberish,
@@ -1515,6 +1564,16 @@ export class MuseumOfHistory extends Contract {
     getIntervals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "getIntervals()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getTokensOfOwner(
+      tokenOwner: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getTokensOfOwner(address)"(
+      tokenOwner: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     initialize(
       initialPrice: BigNumberish,
