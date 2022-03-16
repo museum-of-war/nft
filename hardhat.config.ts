@@ -8,8 +8,6 @@ import "@openzeppelin/hardhat-upgrades";
 import { config as dotenv } from "dotenv";
 dotenv();
 
-import "./tasks/accounts";
-
 const DEFAULT_ACCOUNT_MNEMONIC =
   "siren crystal legend undo cattle comfort lazy cargo move into flower rocket hammer robot affair razor lens viable expand cat vehicle reduce figure river";
 
