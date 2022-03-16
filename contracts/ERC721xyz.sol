@@ -12,7 +12,7 @@ import '@openzeppelin/contracts/utils/Context.sol';
 import '@openzeppelin/contracts/utils/Strings.sol';
 import '@openzeppelin/contracts/utils/introspection/ERC165.sol';
 
-interface FairXYZWallets {
+interface IFairXYZWallets {
     function view_signer() view external returns(address);
     function view_withdraw() view external returns(address);
 }

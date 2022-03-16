@@ -149,7 +149,7 @@ contract FairXYZMH is ERC721xyz, Pausable{
         returns (uint256)
     {
         bytes32 messageHash = hashTransaction(msg.sender, numberOfTokens, nonce);
-        address sign_add = FairXYZWallets(interface_address).view_signer(); 
+        address sign_add = IFairXYZWallets(interface_address).view_signer();
         require(messageHash.recover(signature) == sign_add, "Unrecognizable Hash");
         require(!usedHashes[messageHash], "Reused Hash");
         require(view_minted() + numberOfTokens <= MAX_Tokens, "This amount exceeds the maximum number of NFTs on sale!");
