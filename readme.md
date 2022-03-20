@@ -12,6 +12,8 @@ Compile contracts:
 
 <i> brownie compile </i>
 
+If compilation fails, empty the 'build' folder (not included in the repo as part of .gitignore)
+
 Running contracts:
 
 All logic for contract constructors and deployment with relevant comments can be found on scripts/deploy.py
@@ -19,3 +21,4 @@ All logic for contract constructors and deployment with relevant comments can be
 To deploy contracts:
 
 <i> brownie run deploy </i>
+
