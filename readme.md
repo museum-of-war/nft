@@ -1,16 +1,16 @@
-Welcome to the ERC721xyz repo!
+<b> Welcome to the ERC721xyz repo! </b>
 
 To run this script, install brownie on terminal:
 
-pip install eth-brownie
+<i> pip install eth-brownie </i>
 
 We only use OpenSea dependencies, install as follows on terminal:
 
-brownie pm install OpenZeppelin/openzeppelin-contracts@4.0.0
+<i> brownie pm install OpenZeppelin/openzeppelin-contracts@4.0.0 </i>
 
 Compile contracts:
 
-brownie compile
+<i> brownie compile </i>
 
 Running contracts:
 
@@ -18,4 +18,4 @@ All logic for contract constructors and deployment with relevant comments can be
 
 To deploy contracts:
 
-brownie run deploy
+<i> brownie run deploy </i>
