@@ -15,8 +15,8 @@ def main():
         publish_source = True
 
     # Deploy the contract where multi-sig wallet defines Signer wallets
-    FairXYZWallets_ = FairXYZWallets.deploy("0xb403d77946B4Ac4FC7CA2EE1059e73f1b72D6e93", "0x165CD37b4C644C2921454429E7F9358d18A45e14", {'from': deployer_account}, 
-                publish_source = publish_source)
+    FairXYZWallets_ = FairXYZWallets.deploy("0xb403d77946B4Ac4FC7CA2EE1059e73f1b72D6e93", "0x165CD37b4C644C2921454429E7F9358d18A45e14",
+     {'from': deployer_account}, publish_source = publish_source)
     print("Wallets deployed at: ", FairXYZWallets_.address)
 
     price_eth = 0.15 # in ethereum
