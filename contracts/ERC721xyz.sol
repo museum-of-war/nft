@@ -4,13 +4,13 @@
 
 pragma solidity ^0.8.0;
 
-import '@openzeppelin/contracts/token/ERC721/IERC721.sol';
-import '@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol';
-import '@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol';
-import '@openzeppelin/contracts/utils/Address.sol';
-import '@openzeppelin/contracts/utils/Context.sol';
-import '@openzeppelin/contracts/utils/Strings.sol';
-import '@openzeppelin/contracts/utils/introspection/ERC165.sol';
+import 'OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/token/ERC721/IERC721.sol';
+import 'OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/token/ERC721/IERC721Receiver.sol';
+import 'OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/token/ERC721/extensions/IERC721Metadata.sol';
+import 'OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/utils/Address.sol';
+import 'OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/utils/Context.sol';
+import 'OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/utils/Strings.sol';
+import 'OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/utils/introspection/ERC165.sol';
 
 interface IFairXYZWallets {
     function view_signer() view external returns(address);
@@ -105,6 +105,9 @@ contract ERC721xyz is Context, ERC165, IERC721, IERC721Metadata {
      * - `tokenId` must not exist.
      * - `to` cannot be the zero address.
      *
+     * FAIR.xyz 
+     * Batch minting optimisation
+     *
      * Emits a {Transfer} event.
      */
     function _mint(address to, uint256 numberOfTokens) internal virtual {
@@ -130,11 +133,15 @@ contract ERC721xyz is Context, ERC165, IERC721, IERC721Metadata {
 
     /**
      * @dev See {IERC721-ownerOf}.
+     *
+     * FAIR.xyz
+     * Batch minting modification
+     *
      */
     function ownerOf(uint256 tokenId) public view virtual override returns (address) {
 
-        require( 0 < tokenId && tokenId <= _mintedTokens, "ERC721F: owner query for nonexistent token" );      
-        require( !burnedTokens[tokenId], "ERC721F: burnt token" );
+        require( 0 < tokenId && tokenId <= _mintedTokens, "ERC721xyz: owner query for nonexistent token" );      
+        require( !burnedTokens[tokenId], "ERC721xyz: burnt token" );
         
         uint256 counter = tokenId;
         

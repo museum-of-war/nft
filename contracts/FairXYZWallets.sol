@@ -3,7 +3,7 @@
 
 pragma solidity ^0.8.7;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/access/Ownable.sol";
 
 contract FairXYZWallets is Ownable{
     

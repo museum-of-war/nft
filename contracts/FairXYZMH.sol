@@ -4,8 +4,8 @@
 pragma solidity ^0.8.7;
 
 import "./ERC721xyz.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
-import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/security/Pausable.sol";
+import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/utils/cryptography/ECDSA.sol";
 
 contract FairXYZMH is ERC721xyz, Pausable{
     
