@@ -22,3 +22,10 @@ To deploy contracts:
 
 <i> brownie run deploy </i>
 
+**About ERC721xyz**
+
+ERC721xyz implements _batch minting_, this means it allows for minting of multiple NFTs for the cost of minting
+a single NFT.
+
+To do this, we define a new mapping orig_owners, employ some checks in the ownerOf(uint256 tokenId) function, so that
+it employs a combination of the mappings orig_owners and owners to determine the owner of a certain tokenId.
