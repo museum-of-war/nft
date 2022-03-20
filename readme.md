@@ -16,6 +16,9 @@ If compilation fails, empty the 'build' folder (not included in the repo as part
 
 Running contracts:
 
+'ganache-local' is the default network defined on brownie-config.yaml - edit here whichever network you want to use
+from '$ brownie networks list' (or create your own using '$ brownie networks add <env> <id? [key=value, ...]'
+
 All logic for contract constructors and deployment with relevant comments can be found on scripts/deploy.py
 
 To deploy contracts:
