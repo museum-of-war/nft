@@ -64,7 +64,7 @@ contract FairXYZMH is ERC721xyz, Pausable{
 
     // Limit on NFT sale
     modifier saleIsOpen{
-        require(view_minted() < MAX_Tokens, "Sale end");
+        require(viewMinted() < MAX_Tokens, "Sale end");
         _;
     }
 
@@ -112,11 +112,11 @@ contract FairXYZMH is ERC721xyz, Pausable{
     // Airdrop a token
     function airdrop(address[] memory address_, uint256 token_count) onlyOwner public returns(uint256) 
     {
-        require(view_minted() + address_.length * token_count <= MAX_Tokens, "This exceeds the maximum number of NFTs on sale!");
+        require(viewMinted() + address_.length * token_count <= MAX_Tokens, "This exceeds the maximum number of NFTs on sale!");
         for(uint256 i = 0; i < address_.length; i++) {
             _mint(address_[i], token_count);
         }
-        return view_minted();
+        return viewMinted();
     }
 
     function hashTransaction(address sender, uint256 qty, uint256 nonce) private pure returns(bytes32) {
@@ -152,7 +152,7 @@ contract FairXYZMH is ERC721xyz, Pausable{
         address sign_add = IFairXYZWallets(interface_address).view_signer();
         require(messageHash.recover(signature) == sign_add, "Unrecognizable Hash");
         require(!usedHashes[messageHash], "Reused Hash");
-        require(view_minted() + numberOfTokens <= MAX_Tokens, "This amount exceeds the maximum number of NFTs on sale!");
+        require(viewMinted() + numberOfTokens <= MAX_Tokens, "This amount exceeds the maximum number of NFTs on sale!");
         require(msg.value >= NFT_price * numberOfTokens, "You have not sent the required amount of ETH");
         require(numberOfTokens <= 20, "Token minting limit per transaction exceeded");
         require(block.number <= nonce  + 20, "Time limit has passed");
@@ -167,7 +167,7 @@ contract FairXYZMH is ERC721xyz, Pausable{
         if(Max_mints_per_wallet > 0)
             mintsPerWallet[msg.sender] += numberOfTokens;
         
-        return view_minted();
+        return viewMinted();
     }
     
     // transfer ownership of the smart contract

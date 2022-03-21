@@ -85,7 +85,7 @@ contract ERC721xyz is Context, ERC165, IERC721, IERC721Metadata {
     /**
      * @dev Returns number of minted Tokens
      */
-    function view_minted() public view virtual returns(uint256) {
+    function viewMinted() public view virtual returns(uint256) {
         return _mintedTokens;
     }
 
