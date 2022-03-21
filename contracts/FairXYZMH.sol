@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // @ Fair.xyz dev
 
-pragma solidity ^0.8.7;
+pragma solidity 0.8.7;
 
 import "./ERC721xyz.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/security/Pausable.sol";
@@ -23,7 +23,7 @@ contract FairXYZMH is ERC721xyz, Pausable{
 
     address public owner;
 
-    address public ukraineAddress;
+    address public immutable ukraineAddress;
 
     // set this number to 0 for unlimited mints per wallet (also saves gas when minting)
     uint256 internal Max_mints_per_wallet; 
