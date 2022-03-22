@@ -4,7 +4,7 @@ To run this script, install brownie on terminal:
 
 <i> pip install eth-brownie </i>
 
-We only use OpenSea dependencies, install as follows on terminal:
+We only use OpenZeppelin dependencies, install as follows on terminal:
 
 <i> brownie pm install OpenZeppelin/openzeppelin-contracts@4.0.0 </i>
 
