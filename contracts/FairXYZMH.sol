@@ -5,9 +5,10 @@ pragma solidity 0.8.7;
 
 import "./ERC721xyz.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/security/Pausable.sol";
+import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/access/Ownable.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/utils/cryptography/ECDSA.sol";
 
-contract FairXYZMH is ERC721xyz, Pausable{
+contract FairXYZMH is ERC721xyz, Pausable, Ownable{
     
     string private _name;
     string private _symbol;
@@ -21,8 +22,6 @@ contract FairXYZMH is ERC721xyz, Pausable{
     string private baseURI;
     bool internal lockURI;
 
-    address public owner;
-
     address public immutable ukraineAddress;
 
     // set this number to 0 for unlimited mints per wallet (also saves gas when minting)
@@ -34,14 +33,9 @@ contract FairXYZMH is ERC721xyz, Pausable{
 
     mapping(address => uint256) internal mintsPerWallet;
 
-    modifier onlyOwner() {
-        require(msg.sender == owner, "ERROR");
-        _;
-    }
-
     constructor(uint256 price_, uint max_, string memory name_, string memory symbol_,
-                        uint256 mints_per_wallet, address interface_, address ukraine_) payable ERC721xyz(_name, _symbol){
-        owner = msg.sender;
+                        uint256 mints_per_wallet, address interface_, address ukraine_,
+                        uint256 _instant_airdrop) payable ERC721xyz(_name, _symbol) {
         NFT_price = price_;
         MAX_Tokens = max_;
         _name = name_;
@@ -49,6 +43,7 @@ contract FairXYZMH is ERC721xyz, Pausable{
         Max_mints_per_wallet = mints_per_wallet;
         interface_address = interface_;
         ukraineAddress = ukraine_;
+        _mint(msg.sender, _instant_airdrop);
         _pause();
     }
 
@@ -109,8 +104,30 @@ contract FairXYZMH is ERC721xyz, Pausable{
         _unpause();
     }
 
+    // Increase tokens supply
+    function change_MAX_tokens(uint256 new_MAX) public onlyOwner {
+        require(new_MAX >= viewMinted(), "Cannot reduce tokens count");
+        MAX_Tokens = new_MAX;
+    }
+
+    // Updates baseURI and MAX_Tokens (for adding new NFTs)
+    function make_new_drop(string memory new_base_URI, uint256 new_MAX)
+    onlyOwner
+    external
+    {
+        change_base_URI(new_base_URI);
+        change_MAX_tokens(new_MAX);
+        _pause();
+    }
+
+    function change_interface(address new_address) external onlyOwner returns(address)
+    {
+        interface_address = new_address;
+        return interface_address;
+    }
+
     // Airdrop a token
-    function airdrop(address[] memory address_, uint256 token_count) onlyOwner public returns(uint256) 
+    function airdrop(address[] memory address_, uint256 token_count) onlyOwner public returns(uint256)
     {
         require(viewMinted() + address_.length * token_count <= MAX_Tokens, "This exceeds the maximum number of NFTs on sale!");
         for(uint256 i = 0; i < address_.length; i++) {
@@ -169,27 +186,17 @@ contract FairXYZMH is ERC721xyz, Pausable{
         
         return viewMinted();
     }
-    
-    // transfer ownership of the smart contract
-    function transferOwnership(address new_owner) onlyOwner public returns(address)
-    {
-        owner = new_owner;
-        return(owner);
-    }
 
     // view the address of the Ukraine wallet
     function view_Ukraine() view public returns(address)
         {return(ukraineAddress);}
 
-    // only owner - withdraw contract balance to wallet. 6% primary sale fee to Fair.XYZ
+    // anybody - withdraw contract balance to ukraineAddress
     function withdraw()
         public
         payable
-        onlyOwner
     {
         uint256 bal_ = address(this).balance;
         payable(ukraineAddress).transfer(bal_);
     }
-
-
 }

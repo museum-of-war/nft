@@ -20,16 +20,17 @@ def main():
     print("Wallets deployed at: ", FairXYZWallets_.address)
 
     price_eth = 0.15 # in ethereum
-    NFTs_on_sale = 10000 # size of collection
+    NFTs_on_sale = 10000 # initial size of collection
     Name_of_collection = "MetaHistory" # Collection name
     Symbol_of_collection = "MHXYZ" # Collection ticker
     Mints_per_wallet = "20" # Maximum number of mints recommended per wallet (recommended 5-20)
     Interface_address = FairXYZWallets_.address # Address of wallet reference contracts, 
     Ukraine_wallet_address = "0x165CD37b4C644C2921454429E7F9358d18A45e14" # Wallet for Ukrainian government
+    instant_airdrop = 4 # number of tokens to airdrop to owner
 
     # Deploy the MetaHistory contract
     FairXYZMH_ = FairXYZMH.deploy(price_eth * 10**18, NFTs_on_sale, Name_of_collection, Symbol_of_collection,
-                                Mints_per_wallet, Interface_address, Ukraine_wallet_address, {'from': deployer_account},
+                                Mints_per_wallet, Interface_address, Ukraine_wallet_address, instant_airdrop, {'from': deployer_account},
                                 publish_source = publish_source)
 
     print("Contract deployed at: ", FairXYZMH_.address)
