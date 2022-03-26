@@ -8,8 +8,10 @@ import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/access/Ownable.sol"
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/security/Pausable.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/access/Ownable.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/utils/cryptography/ECDSA.sol";
+import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/security/ReentrancyGuard.sol";
 
-contract FairXYZMH is ERC721xyz, Pausable, Ownable{
+
+contract FairXYZMH is ERC721xyz, Pausable, Ownable, ReentrancyGuard{
     
     string private _name;
     string private _symbol;
@@ -41,9 +43,11 @@ contract FairXYZMH is ERC721xyz, Pausable, Ownable{
         MAX_Tokens = max_;
         _name = name_;
         _symbol = symbol_;
+        //Set to 0
         Max_mints_per_wallet = mints_per_wallet;
         interface_address = interface_;
         ukraineAddress = ukraine_;
+        // For auction
         _mint(msg.sender, _instant_airdrop);
         _pause();
     }
@@ -103,22 +107,6 @@ contract FairXYZMH is ERC721xyz, Pausable, Ownable{
     // unpause minting 
     function unpause() public onlyOwner {
         _unpause();
-    }
-
-    // Increase tokens supply
-    function change_MAX_tokens(uint256 new_MAX) public onlyOwner {
-        require(new_MAX >= viewMinted(), "Cannot reduce tokens count");
-        MAX_Tokens = new_MAX;
-    }
-
-    // Updates baseURI and MAX_Tokens (for adding new NFTs)
-    function make_new_drop(string memory new_base_URI, uint256 new_MAX)
-    onlyOwner
-    external
-    {
-        change_base_URI(new_base_URI);
-        change_MAX_tokens(new_MAX);
-        _pause();
     }
 
     function change_interface(address new_address) external onlyOwner returns(address)
@@ -196,7 +184,9 @@ contract FairXYZMH is ERC721xyz, Pausable, Ownable{
     function withdraw()
         public
         payable
-    {
+        nonReentrant
+    {   
+        require(msg.sender == tx.origin, "Sender must be a wallet");
         uint256 bal_ = address(this).balance;
         payable(ukraineAddress).transfer(bal_);
     }
