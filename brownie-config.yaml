@@ -2,9 +2,10 @@
 # https://eth-brownie.readthedocs.io/en/stable/config.html
 
 networks:
-    default: ganache-local
+    default: development
 
 pytest:
+    cmd: ganache
     # these settings replace the defaults when running pytest
     gas_limit: 6721975
     default_contract_owner: true
