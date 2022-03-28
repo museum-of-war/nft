@@ -25,7 +25,6 @@ def main():
     Symbol_of_collection = "MHXYZ" # Collection ticker
     Mints_per_wallet = "20" # Maximum number of mints recommended per wallet (recommended 5-20)
     Interface_address = FairXYZWallets_.address # Address of wallet reference contracts, 
-    Ukraine_wallet_address = "0x165CD37b4C644C2921454429E7F9358d18A45e14" # Wallet for Ukrainian government
 
     # Deploy the MetaHistory contract
     FairXYZMH_ = FairXYZMH.deploy(price_eth * 10**18, NFTs_on_sale, Name_of_collection, Symbol_of_collection,

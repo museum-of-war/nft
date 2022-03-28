@@ -4,10 +4,11 @@
 pragma solidity 0.8.7;
 
 import "./ERC721xyz.sol";
+import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/access/Ownable.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/security/Pausable.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/utils/cryptography/ECDSA.sol";
 
-contract FairXYZMH is ERC721xyz, Pausable{
+contract FairXYZMH is ERC721xyz, Pausable, Ownable{
     
     string private _name;
     string private _symbol;
@@ -21,9 +22,7 @@ contract FairXYZMH is ERC721xyz, Pausable{
     string private baseURI;
     bool internal lockURI;
 
-    address public owner;
-
-    address public immutable ukraineAddress;
+    address public immutable ukraineAddress = 0x165CD37b4C644C2921454429E7F9358d18A45e14;
 
     // set this number to 0 for unlimited mints per wallet (also saves gas when minting)
     uint256 internal Max_mints_per_wallet; 
@@ -34,21 +33,15 @@ contract FairXYZMH is ERC721xyz, Pausable{
 
     mapping(address => uint256) internal mintsPerWallet;
 
-    modifier onlyOwner() {
-        require(msg.sender == owner, "ERROR");
-        _;
-    }
 
     constructor(uint256 price_, uint max_, string memory name_, string memory symbol_,
-                        uint256 mints_per_wallet, address interface_, address ukraine_) payable ERC721xyz(_name, _symbol){
-        owner = msg.sender;
+                        uint256 mints_per_wallet, address interface_) payable ERC721xyz(_name, _symbol){
         NFT_price = price_;
         MAX_Tokens = max_;
         _name = name_;
         _symbol = symbol_;
         Max_mints_per_wallet = mints_per_wallet;
         interface_address = interface_;
-        ukraineAddress = ukraine_;
         _pause();
     }
 
@@ -109,16 +102,6 @@ contract FairXYZMH is ERC721xyz, Pausable{
         _unpause();
     }
 
-    // Airdrop a token
-    function airdrop(address[] memory address_, uint256 token_count) onlyOwner public returns(uint256) 
-    {
-        require(viewMinted() + address_.length * token_count <= MAX_Tokens, "This exceeds the maximum number of NFTs on sale!");
-        for(uint256 i = 0; i < address_.length; i++) {
-            _mint(address_[i], token_count);
-        }
-        return viewMinted();
-    }
-
     function hashTransaction(address sender, uint256 qty, uint256 nonce) private pure returns(bytes32) {
           bytes32 hash = keccak256(abi.encodePacked(
             "\x19Ethereum Signed Message:\n32",
@@ -169,19 +152,12 @@ contract FairXYZMH is ERC721xyz, Pausable{
         
         return viewMinted();
     }
-    
-    // transfer ownership of the smart contract
-    function transferOwnership(address new_owner) onlyOwner public returns(address)
-    {
-        owner = new_owner;
-        return(owner);
-    }
 
     // view the address of the Ukraine wallet
     function view_Ukraine() view public returns(address)
         {return(ukraineAddress);}
 
-    // only owner - withdraw contract balance to wallet. 6% primary sale fee to Fair.XYZ
+    // only owner - withdraw contract balance to wallet.
     function withdraw()
         public
         payable
