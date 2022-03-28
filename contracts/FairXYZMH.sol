@@ -4,6 +4,7 @@
 pragma solidity 0.8.7;
 
 import "./ERC721xyz.sol";
+import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/access/Ownable.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/security/Pausable.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/access/Ownable.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/utils/cryptography/ECDSA.sol";
