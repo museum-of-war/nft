@@ -63,7 +63,10 @@ def test_mint(meta_history, other, signer_mock):
     assert nonce == meta_history.view_block_number()
     price = meta_history.price()
     tokens_count = 1
-    hash = brownie.web3.solidityKeccak(["address", "uint256", "uint256"], [other.address, tokens_count, nonce])
+    hash = brownie.web3.solidityKeccak(
+        ["address", "uint256", "uint256", "address"],
+        [other.address, tokens_count, nonce, meta_history.address]
+    )
     signature = brownie.web3.eth.sign(signer_mock.address, hash)
     meta_history.unpause()
     meta_history.mint(signature, nonce, tokens_count, {'from': other, 'value': price})

@@ -21,6 +21,10 @@ from '$ brownie networks list' (or create your own using '$ brownie networks add
 
 All logic for contract constructors and deployment with relevant comments can be found on scripts/deploy.py
 
+To test contracts:
+
+<i> brownie test </i>
+
 To deploy contracts:
 
 <i> brownie run deploy </i>
