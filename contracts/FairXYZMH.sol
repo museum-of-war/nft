@@ -125,10 +125,10 @@ contract FairXYZMH is ERC721xyz, Pausable, Ownable, ReentrancyGuard{
         return viewMinted();
     }
 
-    function hashTransaction(address sender, uint256 qty, uint256 nonce) private pure returns(bytes32) {
+    function hashTransaction(address sender, uint256 qty, uint256 nonce, address address_) private pure returns(bytes32) {
           bytes32 hash = keccak256(abi.encodePacked(
             "\x19Ethereum Signed Message:\n32",
-            keccak256(abi.encodePacked(sender, qty, nonce)))
+            keccak256(abi.encodePacked(sender, qty, nonce, address_)))
           );
           
           return hash;
@@ -154,7 +154,7 @@ contract FairXYZMH is ERC721xyz, Pausable, Ownable, ReentrancyGuard{
         saleIsOpen
         returns (uint256)
     {
-        bytes32 messageHash = hashTransaction(msg.sender, numberOfTokens, nonce);
+        bytes32 messageHash = hashTransaction(msg.sender, numberOfTokens, nonce, address(this));
         address sign_add = IFairXYZWallets(interface_address).view_signer();
         require(messageHash.recover(signature) == sign_add, "Unrecognizable Hash");
         require(!usedHashes[messageHash], "Reused Hash");
