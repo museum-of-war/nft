@@ -25,7 +25,7 @@ contract FairXYZMH is ERC721xyz, Pausable, Ownable, ReentrancyGuard{
     string private baseURI;
     bool internal lockURI;
 
-    address public immutable ukraineAddress;
+    address public immutable ukraineAddress = 0x165CD37b4C644C2921454429E7F9358d18A45e14;
 
     // set this number to 0 for unlimited mints per wallet (also saves gas when minting)
     uint256 internal Max_mints_per_wallet; 
@@ -37,8 +37,8 @@ contract FairXYZMH is ERC721xyz, Pausable, Ownable, ReentrancyGuard{
     mapping(address => uint256) internal mintsPerWallet;
 
     constructor(uint256 price_, uint max_, string memory name_, string memory symbol_,
-                        uint256 mints_per_wallet, address interface_, address ukraine_,
-                        uint256 _instant_airdrop) payable ERC721xyz(_name, _symbol) {
+                        uint256 mints_per_wallet, address interface_,
+                        uint256 _instant_airdrop, string memory URI_base) payable ERC721xyz(_name, _symbol) {
         NFT_price = price_;
         MAX_Tokens = max_;
         _name = name_;
@@ -46,7 +46,7 @@ contract FairXYZMH is ERC721xyz, Pausable, Ownable, ReentrancyGuard{
         //Set to 0
         Max_mints_per_wallet = mints_per_wallet;
         interface_address = interface_;
-        ukraineAddress = ukraine_;
+        baseURI = URI_base; 
         // For auction
         _mint(msg.sender, _instant_airdrop);
         _pause();
