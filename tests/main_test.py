@@ -35,7 +35,7 @@ def wallets(owner, signer_mock, withdraw, FairXYZWallets):
 @pytest.fixture
 def meta_history(owner, charity_mock, FairXYZMH, wallets):
     return FairXYZMH.deploy(0.15 * 10 ** 18, 100, "MetaHistory", "MHXYZ", 0,
-                            wallets.address, charity_mock, 0,
+                            wallets.address, 0, "uri_base",
                             {'from': owner}, publish_source=False)
 
 
@@ -45,10 +45,10 @@ def test_is_paused_after_deploy(meta_history, other):
         meta_history.mint("0", 12345, 1, {'from': other})
 
 
-def test_instant_airdrop(owner, charity_mock, FairXYZMH, wallets):
+def test_instant_airdrop(owner, FairXYZMH, wallets):
     instant_airdrop = 4
     meta_history = FairXYZMH.deploy(0.15 * 10 ** 18, 100, "MetaHistory", "MHXYZ", 0,
-                                    wallets.address, charity_mock, instant_airdrop,
+                                    wallets.address, instant_airdrop, "uri_base",
                                     {'from': owner}, publish_source=False)
     assert meta_history.balanceOf(owner) == 4
 
