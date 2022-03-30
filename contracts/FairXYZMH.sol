@@ -18,7 +18,7 @@ contract FairXYZMH is ERC721xyz, Pausable, Ownable, ReentrancyGuard{
 
     using ECDSA for bytes32;
     
-    uint256 internal MAX_Tokens;
+    uint256 public maxTokens;
     
     uint256 internal NFT_price;
 
@@ -40,7 +40,7 @@ contract FairXYZMH is ERC721xyz, Pausable, Ownable, ReentrancyGuard{
                         uint256 mints_per_wallet, address interface_,
                         uint256 _instant_airdrop, string memory URI_base) payable ERC721xyz(_name, _symbol) {
         NFT_price = price_;
-        MAX_Tokens = max_;
+        maxTokens = max_;
         _name = name_;
         _symbol = symbol_;
         //Set to 0
@@ -64,7 +64,7 @@ contract FairXYZMH is ERC721xyz, Pausable, Ownable, ReentrancyGuard{
 
     // Limit on NFT sale
     modifier saleIsOpen{
-        require(viewMinted() < MAX_Tokens, "Sale end");
+        require(viewMinted() < maxTokens, "Sale end");
         _;
     }
 
@@ -118,7 +118,7 @@ contract FairXYZMH is ERC721xyz, Pausable, Ownable, ReentrancyGuard{
     // Airdrop a token
     function airdrop(address[] memory address_, uint256 token_count) onlyOwner public returns(uint256)
     {
-        require(viewMinted() + address_.length * token_count <= MAX_Tokens, "This exceeds the maximum number of NFTs on sale!");
+        require(viewMinted() + address_.length * token_count <= maxTokens, "This exceeds the maximum number of NFTs on sale!");
         for(uint256 i = 0; i < address_.length; i++) {
             _mint(address_[i], token_count);
         }
@@ -163,7 +163,7 @@ contract FairXYZMH is ERC721xyz, Pausable, Ownable, ReentrancyGuard{
         address sign_add = IFairXYZWallets(interface_address).view_signer();
         require(messageHash.recover(signature) == sign_add, "Unrecognizable Hash");
         require(!usedHashes[messageHash], "Reused Hash");
-        require(viewMinted() + numberOfTokens <= MAX_Tokens, "This amount exceeds the maximum number of NFTs on sale!");
+        require(viewMinted() + numberOfTokens <= maxTokens, "This amount exceeds the maximum number of NFTs on sale!");
         require(msg.value >= NFT_price * numberOfTokens, "You have not sent the required amount of ETH");
         require(numberOfTokens <= 20, "Token minting limit per transaction exceeded");
         require(block.number <= nonce  + 20, "Time limit has passed");
