@@ -146,6 +146,11 @@ contract FairXYZMH is ERC721xyz, Pausable, Ownable, ReentrancyGuard{
         return(block.number);
     }
 
+    // View remaining mints per wallet
+    function view_remaining_mints(address address_) public view returns(uint256){
+        return(Max_mints_per_wallet - mintsPerWallet[address_]);
+    }
+
     // Mint tokens
     function mint(bytes memory signature, uint256 nonce, uint256 numberOfTokens)
         payable
