@@ -43,7 +43,7 @@ contract MergerMH is ERC721, Ownable, ReentrancyGuard {
             for (uint256 mergesCount = editionsCount_ / 2; mergesCount > 0; mergesCount /= 2) {
                 nextId += mergesCount; // if 16 editions, then: +8, +4, +2, +1
                 startIds.push(nextId);
-                nextIds.push(nextId); // no tokens, no next = start
+                nextIds.push(nextId); // no tokens, so next = start
             }
         }
     }
@@ -73,13 +73,13 @@ contract MergerMH is ERC721, Ownable, ReentrancyGuard {
 
         int difference = int(tokenId2) - int(tokenId1);
 
-        int periodsCount = difference / int(editionsCount); // editions go in cycles: 1, 2, ... 22, 1, 2, ... 22, ...
+        int periodsCount = difference / int(elementsCount); // elements go in cycles: 1, 2, ... 99, 1, 2, ... 99, ...
 
-        uint256 restoredTokenId2 = uint256(periodsCount) * editionsCount + tokenId1;
+        uint256 restoredTokenId2 = uint256(periodsCount * int(elementsCount) + int(tokenId1));
         require(restoredTokenId2 == tokenId2, "Cannot merge different elements");
 
-        //tokenId = offset + editionsCount * editionIndex + elementId, so:
-        uint256 elementId = (tokenId1 - offset) % editionsCount;
+        //tokenId = offset + elementsCount * editionIndex + elementId, so:
+        uint256 elementId = (tokenId1 - offset) % elementsCount;
 
         uint256 mintingTokenId = nextTokenIds[elementId - 1][0];
 
