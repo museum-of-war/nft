@@ -6,6 +6,7 @@ import 'OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/token/ERC721/IERC72
 import 'OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/token/ERC721/ERC721.sol';
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/access/Ownable.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/security/ReentrancyGuard.sol";
+import "./interfaces/ISimpleMinter.sol";
 
 contract MergerMH is ERC721, Ownable, ReentrancyGuard {
     address public constant burnAddress = address(0x000000000000000000000000000000000000dEaD);
@@ -14,6 +15,7 @@ contract MergerMH is ERC721, Ownable, ReentrancyGuard {
     bool internal isLockedURI;
 
     address public immutable nftAddress;
+    address public immutable rewardAddress;
     // NFTs from 'offset + 1' to 'offset + elementsCount * editionsCount' can be merged
     uint16 internal immutable offset; //NFTs that don't take part in merging
     uint16 internal immutable elementsCount;
@@ -22,10 +24,11 @@ contract MergerMH is ERC721, Ownable, ReentrancyGuard {
     uint16[][] internal nextTokenIds;
 
     constructor(string memory name_, string memory symbol_,
-                address nftAddress_, string memory URI_base,
+                address nftAddress_, address rewardAddress_, string memory baseURI_,
                 uint16 offset_, uint16 elementsCount_, uint16 editionsCount_) payable ERC721(name_, symbol_) {
         nftAddress = nftAddress_;
-        baseURI = URI_base;
+        rewardAddress = rewardAddress_;
+        baseURI = baseURI_;
         offset = offset_;
         elementsCount = elementsCount_;
         editionsCount = editionsCount_;
@@ -132,7 +135,7 @@ contract MergerMH is ERC721, Ownable, ReentrancyGuard {
                 uint256 mintingTokenId = nextTokenIds[elementIndex][nextLevel];
                 _mint(msg.sender, mintingTokenId);
 
-                //TODO: merge reward for high levels
+                ISimpleMinter(rewardAddress).mint(msg.sender); // reward user
 
                 nextTokenIds[elementIndex][nextLevel]++;
                 return mintingTokenId;
