@@ -21,7 +21,6 @@ contract MergerMH is ERC721, Ownable, ReentrancyGuard {
     uint16 internal immutable elementsCount;
     uint16 internal immutable editionsCount;
     uint16[] internal /*immutable*/ startTokenIds;
-    uint16[][] internal nextTokenIds;
 
     constructor(string memory name_, string memory symbol_,
                 address nftAddress_, address rewardAddress_, string memory baseURI_,
@@ -41,15 +40,6 @@ contract MergerMH is ERC721, Ownable, ReentrancyGuard {
         for (uint16 mergesCount = editionsCount_ / 2; mergesCount > 0; mergesCount /= 2) {
             startId += mergesCount; // if 16 editions, then: +8, +4, +2, +1
             startTokenIds.push(startId);
-        }
-
-        uint256 levelsCount = startTokenIds.length;
-
-        for (uint16 i = 0; i < elementsCount_; i++) {
-            uint16[] memory nextIds = new uint16[](levelsCount);
-            uint16 elementOffset = i * totalMergesCount;
-            for (uint16 j = 0; j < levelsCount; j++) nextIds[j] = elementOffset + startTokenIds[j];
-            nextTokenIds.push(nextIds);
         }
     }
 
@@ -77,26 +67,34 @@ contract MergerMH is ERC721, Ownable, ReentrancyGuard {
         require(tokenId1 != tokenId2, "Cannot merge token with self");
 
         int difference = int(tokenId2) - int(tokenId1);
-
         int periodsCount = difference / int16(elementsCount); // elements go in cycles: 1, 2, ... 99, 1, 2, ... 99, ...
 
         uint256 restoredTokenId2 = uint256(periodsCount * int16(elementsCount) + int(tokenId1));
         require(restoredTokenId2 == tokenId2, "Cannot merge different elements");
 
-        //tokenId = offset + elementsCount * editionIndex + elementId, so:
-        uint256 elementId = (tokenId1 - offset) % elementsCount;
+        //tokenId = offset + elementsCount * editionIndex + elementId
+        //elementIndex = elementId - 1
+        uint256 elementIndex = (tokenId1 - offset - 1) % elementsCount;
 
-        uint256 mintingTokenId = nextTokenIds[elementId - 1][0];
+        uint256 totalMergesCount = editionsCount - 1; // explained in constructor
+        uint256 elementOffset = elementIndex * totalMergesCount; // resulting offset
 
-        IERC721 nftContract = IERC721(nftAddress);
-        // burning
-        nftContract.transferFrom(msg.sender, burnAddress, tokenId1);
-        nftContract.transferFrom(msg.sender, burnAddress, tokenId2);
+        uint256 lastId = elementOffset + editionsCount / 2; // offset + levelMergesCount
 
-        _mint(msg.sender, mintingTokenId);
+        for (uint256 mintingTokenId = elementOffset + 1; mintingTokenId <= lastId; mintingTokenId++) {
+            if (_exists(mintingTokenId)) continue; // trying to find next token id
 
-        nextTokenIds[elementId - 1][0]++;
-        return mintingTokenId;
+            IERC721 nftContract = IERC721(nftAddress);
+            // burning
+            nftContract.transferFrom(msg.sender, burnAddress, tokenId1);
+            nftContract.transferFrom(msg.sender, burnAddress, tokenId2);
+
+            _mint(msg.sender, mintingTokenId);
+
+            return mintingTokenId;
+        }
+
+        revert("ERROR"); // cannot merge
     }
 
     // merge 2 NFTs with n level into one with n+1 level (from this contract)
@@ -105,10 +103,8 @@ contract MergerMH is ERC721, Ownable, ReentrancyGuard {
         require(msg.sender == ownerOf(tokenId1) && msg.sender == ownerOf(tokenId2), "Sender must be an owner");
         require(tokenId1 != tokenId2, "Cannot merge token with self");
 
-        uint256 maxDistance = editionsCount / 2; // for 16 editions it can only be 8 merged elements with 1st level
-        int distance = int(tokenId2) - int(tokenId1);
-        uint256 absDistance = distance > 0 ? uint256(distance) : uint256(-distance);
-        require(absDistance < maxDistance, "Cannot merge different tokens");
+        uint256 absDistance = tokenId2 > tokenId1 ? tokenId2 - tokenId1 : tokenId1 - tokenId2;
+        require(absDistance < editionsCount / 2, "Cannot merge different tokens"); // for 16 editions it can only be 8 merged elements with 1st level
 
         uint256 totalMergesCount = editionsCount - 1; // explained in constructor
 
@@ -121,24 +117,27 @@ contract MergerMH is ERC721, Ownable, ReentrancyGuard {
 
             uint256 lastIndex = startTokenIds.length - 2; // skip last level - it cannot be merged
             for (uint256 level = 0; level <= lastIndex; level++) {
-                uint256 nextLevel = level + 1;
                 uint256 currentLevelId = elementOffset + startTokenIds[level];
-                uint256 nextLevelId = elementOffset + startTokenIds[nextLevel];
+                uint256 nextLevelId = elementOffset + startTokenIds[level + 1];
                 // tokens must belong to [currentLevelId, nextLevelId) interval
                 if (tokenId1 < currentLevelId || tokenId1 >= nextLevelId) continue;
                 require(tokenId2 >= currentLevelId && tokenId2 < nextLevelId, "Cannot merge different tokens");
 
                 // burning
-                _burn(tokenId1);
-                _burn(tokenId2);
+                _transfer(msg.sender, burnAddress, tokenId1);
+                _transfer(msg.sender, burnAddress, tokenId2);
 
-                uint256 mintingTokenId = nextTokenIds[elementIndex][nextLevel];
-                _mint(msg.sender, mintingTokenId);
+                uint256 endId = elementOffset + startTokenIds[level + 2];
 
-                ISimpleMinter(rewardAddress).mint(msg.sender); // reward user
+                for (uint256 mintingTokenId = nextLevelId; mintingTokenId < endId; mintingTokenId++) {
+                    if (_exists(mintingTokenId)) continue; // trying to find next token id
 
-                nextTokenIds[elementIndex][nextLevel]++;
-                return mintingTokenId;
+                    _mint(msg.sender, mintingTokenId);
+
+                    ISimpleMinter(rewardAddress).mint(msg.sender); // reward user
+
+                    return mintingTokenId;
+                }
             }
         }
         revert("ERROR"); // something went wrong
