@@ -62,6 +62,8 @@ contract MergerMH is ERC721, Ownable, ReentrancyGuard {
 
     // merge 2 NFTs into one (from other contract - nftAddress)
     function mergeBase(uint256 tokenId1, uint256 tokenId2) external nonReentrant returns (uint256) {
+        IERC721 nftContract = IERC721(nftAddress);
+        require(msg.sender == nftContract.ownerOf(tokenId1) && msg.sender == nftContract.ownerOf(tokenId2), "Sender must an owner");
         require(msg.sender == tx.origin, "Sender must be a wallet");
         require(tokenId1 > offset && tokenId2 > offset, "Cannot merge unique token");
         require(tokenId1 != tokenId2, "Cannot merge token with self");
@@ -83,8 +85,6 @@ contract MergerMH is ERC721, Ownable, ReentrancyGuard {
 
         for (uint256 mintingTokenId = elementOffset + 1; mintingTokenId <= lastId; mintingTokenId++) {
             if (_exists(mintingTokenId)) continue; // trying to find next token id
-
-            IERC721 nftContract = IERC721(nftAddress);
             // burning
             nftContract.transferFrom(msg.sender, burnAddress, tokenId1);
             nftContract.transferFrom(msg.sender, burnAddress, tokenId2);
