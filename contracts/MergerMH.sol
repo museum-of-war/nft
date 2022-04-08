@@ -63,7 +63,7 @@ contract MergerMH is ERC721, Ownable, ReentrancyGuard {
     // merge 2 NFTs into one (from other contract - nftAddress)
     function mergeBase(uint256 tokenId1, uint256 tokenId2) external nonReentrant returns (uint256) {
         IERC721 nftContract = IERC721(nftAddress);
-        require(msg.sender == nftContract.ownerOf(tokenId1) && msg.sender == nftContract.ownerOf(tokenId2), "Sender must an owner");
+        require(msg.sender == nftContract.ownerOf(tokenId1) && msg.sender == nftContract.ownerOf(tokenId2), "Sender must be an owner");
         require(msg.sender == tx.origin, "Sender must be a wallet");
         require(tokenId1 > offset && tokenId2 > offset, "Cannot merge unique token");
         require(tokenId1 != tokenId2, "Cannot merge token with self");
@@ -103,41 +103,35 @@ contract MergerMH is ERC721, Ownable, ReentrancyGuard {
         require(msg.sender == ownerOf(tokenId1) && msg.sender == ownerOf(tokenId2), "Sender must be an owner");
         require(tokenId1 != tokenId2, "Cannot merge token with self");
 
-        uint256 absDistance = tokenId2 > tokenId1 ? tokenId2 - tokenId1 : tokenId1 - tokenId2;
-        require(absDistance < editionsCount / 2, "Cannot merge different tokens"); // for 16 editions it can only be 8 merged elements with 1st level
-
         uint256 totalMergesCount = editionsCount - 1; // explained in constructor
 
-        for (uint256 elementIndex = 0; elementIndex < startTokenIds.length; elementIndex++) {
-            uint256 elementOffset = elementIndex * totalMergesCount;
-            uint256 firstId = elementOffset + startTokenIds[0];
-            // tokens must belong to [firstId, firstId + totalMergesCount) interval
-            if (tokenId1 < firstId || tokenId1 >= firstId + totalMergesCount) continue;
-            require(tokenId2 >= firstId && tokenId2 < firstId + totalMergesCount, "Cannot merge different tokens");
+        uint256 elementIndex = tokenId1 / totalMergesCount;
+        require(tokenId2 / totalMergesCount == elementIndex, "Cannot merge different tokens");
 
-            uint256 lastIndex = startTokenIds.length - 2; // skip last level - it cannot be merged
-            for (uint256 level = 0; level <= lastIndex; level++) {
-                uint256 currentLevelId = elementOffset + startTokenIds[level];
-                uint256 nextLevelId = elementOffset + startTokenIds[level + 1];
-                // tokens must belong to [currentLevelId, nextLevelId) interval
-                if (tokenId1 < currentLevelId || tokenId1 >= nextLevelId) continue;
-                require(tokenId2 >= currentLevelId && tokenId2 < nextLevelId, "Cannot merge different tokens");
+        uint256 elementOffset = elementIndex * totalMergesCount;
 
-                // burning
-                _transfer(msg.sender, burnAddress, tokenId1);
-                _transfer(msg.sender, burnAddress, tokenId2);
+        uint256 lastIndex = startTokenIds.length - 2; // skip last level - it cannot be merged
+        for (uint256 level = 0; level <= lastIndex; level++) {
+            // tokens must belong to [currentLevelId, nextLevelId) interval
+            uint256 nextLevelId = elementOffset + startTokenIds[level + 1];
+            if (tokenId1 >= nextLevelId) continue;
+            uint256 currentLevelId = elementOffset + startTokenIds[level];
+            require(tokenId2 >= currentLevelId && tokenId2 < nextLevelId, "Cannot merge different levels");
 
-                uint256 endId = elementOffset + startTokenIds[level + 2];
+            // burning
+            _transfer(msg.sender, burnAddress, tokenId1);
+            _transfer(msg.sender, burnAddress, tokenId2);
 
-                for (uint256 mintingTokenId = nextLevelId; mintingTokenId < endId; mintingTokenId++) {
-                    if (_exists(mintingTokenId)) continue; // trying to find next token id
+            uint256 endId = elementOffset + startTokenIds[level + 2];
 
-                    _mint(msg.sender, mintingTokenId);
+            for (uint256 mintingTokenId = nextLevelId; mintingTokenId < endId; mintingTokenId++) {
+                if (_exists(mintingTokenId)) continue; // trying to find next token id
 
-                    ISimpleMinter(rewardAddress).mint(msg.sender); // reward user
+                _mint(msg.sender, mintingTokenId);
 
-                    return mintingTokenId;
-                }
+                ISimpleMinter(rewardAddress).mint(msg.sender); // reward user
+
+                return mintingTokenId;
             }
         }
         revert("ERROR"); // something went wrong
