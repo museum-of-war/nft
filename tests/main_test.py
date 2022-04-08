@@ -101,6 +101,26 @@ def test_mint(meta_history, other, signer_mock):
     assert meta_history.balanceOf(other) == tokens_count
 
 
+def test_prospect100_instant_airdrop(owner, Prospect100MH):
+    instant_airdrop = 4
+    prospect100 = Prospect100MH.deploy("Prospect 100", "P100MH",
+                                       "uri_base", instant_airdrop,
+                                       {'from': owner}, publish_source=False)
+    assert prospect100.balanceOf(owner) == instant_airdrop
+
+
+def test_prospect100_mint_success(prospect100, other, stranger):
+    prospect100.changeMinterAddress(other.address)
+    prospect100.mint(stranger.address, {'from': other})
+    assert prospect100.balanceOf(stranger) == 1
+
+
+def test_prospect100_mint_wrong_minter_error(prospect100, other, stranger):
+    prospect100.changeMinterAddress(stranger.address)
+    with brownie.reverts("Not a minter"):
+        prospect100.mint(stranger.address, {'from': other})
+
+
 @pytest.mark.parametrize('token_id', [5, 4 + elementsCount, totalTokensCount - elementsCount])
 def test_merge_base_success(merger, meta_history, other, token_id):
     meta_history.airdrop([other], totalTokensCount)
