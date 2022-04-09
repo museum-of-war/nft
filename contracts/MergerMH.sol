@@ -60,36 +60,78 @@ contract MergerMH is ERC721, Ownable, ReentrancyGuard {
         return baseURI;
     }
 
-    // merge 2 NFTs into one (from other contract - nftAddress)
-    function mergeBase(uint256 tokenId1, uint256 tokenId2) external nonReentrant returns (uint256) {
-        IERC721 nftContract = IERC721(nftAddress);
-        require(msg.sender == nftContract.ownerOf(tokenId1) && msg.sender == nftContract.ownerOf(tokenId2), "Sender must be an owner");
+    function getTokenInfo(uint256 tokenId) external view returns (uint256 tokenNumber, uint256 level) {
+        uint256 totalMergesCount = editionsCount - 1; // explained in constructor
+        uint256 elementIndex = tokenId / totalMergesCount;
+        tokenNumber = elementIndex + offset + 1; // start from 1
+
+        uint256 elementOffset = elementIndex * totalMergesCount;
+        for (uint256 i = 0; i < startTokenIds.length - 1; i++) {
+            uint256 nextLevelId = elementOffset + startTokenIds[i + 1];
+            if (tokenId >= nextLevelId) continue;
+            return (tokenNumber, i + 1); // level starts from 1
+        }
+
+        return (tokenNumber, startTokenIds.length); // level starts from 1
+    }
+
+    // merge n NFTs of 0th level into one of high level (from other contract - nftAddress)
+    function mergeBaseBatch(uint256[] memory tokenIds) external nonReentrant returns (uint256) {
+        uint256 countToMerge = tokenIds.length;
+        unchecked { // compute a power of two less than or equal to `countToMerge`
+            while (countToMerge & countToMerge - 1 != 0) {
+                countToMerge = countToMerge & countToMerge - 1;
+            }
+        }
+        require(countToMerge >= 2, "Not enough tokens");
+        //require(countToMerge == tokenIds.length, "Wrong tokens count");
         require(msg.sender == tx.origin, "Sender must be a wallet");
-        require(tokenId1 > offset && tokenId2 > offset, "Cannot merge unique token");
-        require(tokenId1 != tokenId2, "Cannot merge token with self");
 
-        int difference = int(tokenId2) - int(tokenId1);
-        int periodsCount = difference / int16(elementsCount); // elements go in cycles: 1, 2, ... 99, 1, 2, ... 99, ...
+        IERC721 nftContract = IERC721(nftAddress);
 
-        uint256 restoredTokenId2 = uint256(periodsCount * int16(elementsCount) + int(tokenId1));
-        require(restoredTokenId2 == tokenId2, "Cannot merge different elements");
+        uint256 elementIndex;
 
-        //tokenId = offset + elementsCount * editionIndex + elementId
-        //elementIndex = elementId - 1
-        uint256 elementIndex = (tokenId1 - offset - 1) % elementsCount;
+        for(uint256 i = 0; i < countToMerge; i++) {
+            uint256 tokenId = tokenIds[i];
+            require(msg.sender == nftContract.ownerOf(tokenId), "Sender must be an owner");
+            require(tokenId > offset, "Cannot merge unique token");
+            for(uint256 j = i + 1; j < countToMerge; j++) {
+                require(tokenId != tokenIds[j], "Cannot merge token with self");
+            }
+            //tokenId = offset + elementsCount * editionIndex + elementId
+            //elementIndex = elementId - 1
+            if (i == 0) {
+                elementIndex = (tokenId - offset - 1) % elementsCount;
+            } else {
+                require((tokenId - offset - 1) % elementsCount == elementIndex, "Cannot merge different elements");
+            }
+        }
 
         uint256 totalMergesCount = editionsCount - 1; // explained in constructor
         uint256 elementOffset = elementIndex * totalMergesCount; // resulting offset
 
-        uint256 lastId = elementOffset + editionsCount / 2; // offset + levelMergesCount
+        uint256 level;
+        for (level = 0; level < startTokenIds.length; level++) {
+            if (countToMerge == 1 << level) break;
+        }
 
-        for (uint256 mintingTokenId = elementOffset + 1; mintingTokenId <= lastId; mintingTokenId++) {
+        uint256 endId = elementOffset + startTokenIds[level];
+
+        for (uint256 mintingTokenId = elementOffset + startTokenIds[level - 1]; mintingTokenId < endId; mintingTokenId++) {
             if (_exists(mintingTokenId)) continue; // trying to find next token id
             // burning
-            nftContract.transferFrom(msg.sender, burnAddress, tokenId1);
-            nftContract.transferFrom(msg.sender, burnAddress, tokenId2);
+            for (uint256 i = 0; i < countToMerge; i++) {
+                nftContract.transferFrom(msg.sender, burnAddress, tokenIds[i]);
+            }
 
             _mint(msg.sender, mintingTokenId);
+             // reward user
+            if (level > 1) { // only 4+ tokens
+                uint256 rewardsCount = (countToMerge >> 1) - 1; // 4 -> 1 (start), 8 -> 3 (3 rewards: for 4, 4, and 8)
+                for (uint256 reward = 0; reward < level; reward++) {
+                    ISimpleMinter(rewardAddress).mint(msg.sender);
+                }
+            }
 
             return mintingTokenId;
         }
