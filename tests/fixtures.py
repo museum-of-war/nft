@@ -59,8 +59,13 @@ def prospect100(owner, Prospect100MH):
 @pytest.fixture
 def merger(owner, MergerMH, meta_history, prospect100):
     merger_contract = MergerMH.deploy("MetaHistory: High Levels", "MHHL",
-                           meta_history.address, prospect100.address, "uri_base",
-                           specialTokensCount, elementsCount, editionsCount,
-                           {'from': owner}, publish_source=False)
+                                      meta_history.address, prospect100.address, "uri_base",
+                                      specialTokensCount, elementsCount, editionsCount,
+                                      {'from': owner}, publish_source=False)
     prospect100.changeMinterAddress(merger_contract.address)
     return merger_contract
+
+
+@pytest.fixture
+def hall(owner, HallMH):
+    return HallMH.deploy("Hall of Meta History", "HMH", {'from': owner}, publish_source=False)
