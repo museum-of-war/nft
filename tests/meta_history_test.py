@@ -1,42 +1,6 @@
-import pytest
 import brownie
-
-
-@pytest.fixture
-def owner(accounts):
-    return accounts[0]
-
-
-@pytest.fixture
-def signer_mock(accounts):
-    return accounts[1]
-
-
-@pytest.fixture
-def charity_mock(accounts):
-    return accounts[2]
-
-
-@pytest.fixture
-def withdraw(accounts):
-    return accounts[3]
-
-
-@pytest.fixture
-def other(accounts):
-    return accounts[4]
-
-
-@pytest.fixture
-def wallets(owner, signer_mock, withdraw, FairXYZWallets):
-    return FairXYZWallets.deploy(signer_mock, withdraw, {'from': owner}, publish_source=False)
-
-
-@pytest.fixture
-def meta_history(owner, charity_mock, FairXYZMH, wallets):
-    return FairXYZMH.deploy(0.15 * 10 ** 18, 100, "MetaHistory", "MHXYZ", 0,
-                            wallets.address, 0, "uri_base",
-                            {'from': owner}, publish_source=False)
+# noinspection PyUnresolvedReferences
+from fixtures import *
 
 
 def test_is_paused_after_deploy(meta_history, other):
