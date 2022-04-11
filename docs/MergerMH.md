@@ -21,15 +21,15 @@ Here is some information about levels:
 - level 2:
   - only 5 tokens of each event can be created
   - can be got from 4 tokens of 0th level or 2 tokens of 1st level
-  - can give reward token from PROSPECT 100 collection (see [Prospect100](./Prospect100MH.md))
+  - can give **reward token** from PROSPECT 100 collection (see [Prospect100](./Prospect100MH.md))
 - level 3:
   - only 2 tokens of each event can be created
   - can be got from 8 tokens of 0th level or 2 tokens of 2nd level
-  - can give reward token from PROSPECT 100 collection (see [Prospect100](./Prospect100MH.md))
+  - can give **reward token** from PROSPECT 100 collection (see [Prospect100](./Prospect100MH.md))
 - level 4:
   - only 1 token of each event can be created
   - can be got from 16 tokens of 0th level or 2 tokens of 3rd level
-  - can give reward token from PROSPECT 100 collection (see [Prospect100](./Prospect100MH.md))
+  - can give **reward token** from PROSPECT 100 collection (see [Prospect100](./Prospect100MH.md))
 
 ## Levels merging
 
@@ -151,18 +151,18 @@ Here is some information about levels:
 Base merge is about merging initial tokens of [FairXYZMH](./FairXYZMH.md) (first drop) collection.
 
 - token #5 and #104 can be merged (belongs to event #5) to get 1st level
-- token #1 and #100 cannot be merged (token #4 is unique)
-- token #5 and #6 cannot be merged (belongs different events)
-- token #5 and #5 cannot be merged (cannot merge with self)
+- token #1 and #100 cannot be merged (token #1 is unique)
+- token #5 and #6 cannot be merged (belongs to different events)
+- token #5 and #5 cannot be merged (cannot merge token with self)
 - token #5, #104, #203 and #302 can be merged (belongs to event #5) to get 2nd level
-and reward token (if there are any unminted tokens of [Prospect100MH](./Prospect100MH.md))
+and **reward token** (if there are any unminted tokens of [Prospect100MH](./Prospect100MH.md))
 
 ### Advanced merge
 
 Advanced merge is about merging tokens of 'high levels' of MergerMH (current collection)
 - 1st level token of event #5 can be merged only with 1st level token of event #5
-(also a reward token from Prospect100MH can be minted if there are still tokens left)
+(also a **reward token** from Prospect100MH can be minted if there are still tokens left)
 - 1st level token of event #5 cannot be merged with 1st level token of event #6 (different events)
 - 1st level token of event #5 cannot be merged with 2nd level token of event #5 (different levels)
-- actually any two tokens of the same event and same n-th level can be merged into one (n+1)-th level token
-(and a reward token from Prospect100MH can be given if there are still reward tokens left)
+- actually any two tokens of the same event and same (n-th) level can be merged into one (n+1)-th level token
+(and a **reward token** from Prospect100MH can be given if there are still reward tokens left)
