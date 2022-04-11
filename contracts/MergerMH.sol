@@ -6,7 +6,7 @@ import 'OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/token/ERC721/IERC72
 import 'OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/token/ERC721/ERC721.sol';
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/access/Ownable.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/security/ReentrancyGuard.sol";
-import "./interfaces/ISimpleMinter.sol";
+import "./interfaces/ISimpleLimitedMinter.sol";
 
 contract MergerMH is ERC721, Ownable, ReentrancyGuard {
     address public constant burnAddress = address(0x000000000000000000000000000000000000dEaD);
@@ -129,7 +129,7 @@ contract MergerMH is ERC721, Ownable, ReentrancyGuard {
             if (level > 1) { // only 4+ tokens
                 uint256 rewardsCount = (countToMerge >> 1) - 1; // 4 -> 1 (start), 8 -> 3 (3 rewards: for 4, 4, and 8)
                 for (uint256 reward = 0; reward < level; reward++) {
-                    ISimpleMinter(rewardAddress).mint(msg.sender);
+                    ISimpleLimitedMinter(rewardAddress).tryMint(msg.sender);
                 }
             }
 
@@ -171,7 +171,7 @@ contract MergerMH is ERC721, Ownable, ReentrancyGuard {
 
                 _mint(msg.sender, mintingTokenId);
 
-                ISimpleMinter(rewardAddress).mint(msg.sender); // reward user
+                ISimpleLimitedMinter(rewardAddress).tryMint(msg.sender); // reward user
 
                 return mintingTokenId;
             }

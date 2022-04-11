@@ -6,6 +6,7 @@ elementsCount = 9
 editionsCount = 11
 totalTokensCount = specialTokensCount + elementsCount * editionsCount
 prospect100AirdropCount = 12
+prospect100TotalCount = 100
 
 @pytest.fixture
 def owner(accounts):
@@ -51,7 +52,7 @@ def meta_history(owner, charity_mock, FairXYZMH, wallets):
 
 @pytest.fixture
 def prospect100(owner, Prospect100MH):
-    return Prospect100MH.deploy("Prospect 100", "P100MH",
+    return Prospect100MH.deploy(prospect100TotalCount, "Prospect 100", "P100MH",
                                 "uri_base", prospect100AirdropCount,
                                 {'from': owner}, publish_source=False)
 
