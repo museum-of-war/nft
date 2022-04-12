@@ -70,3 +70,9 @@ def merger(owner, MergerMH, meta_history, prospect100):
 @pytest.fixture
 def hall(owner, HallMH):
     return HallMH.deploy("Hall of Meta History", "HMH", {'from': owner}, publish_source=False)
+
+
+@pytest.fixture
+def georgia(owner, GeorgiaMH):
+    return GeorgiaMH.deploy("Meta History: Georgia", "GMH", 65,
+                            "uri_base", owner.address, {'from': owner}, publish_source=False)
