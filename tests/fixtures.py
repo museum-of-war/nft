@@ -74,5 +74,5 @@ def hall(owner, HallMH):
 
 @pytest.fixture
 def georgia(owner, GeorgiaMH):
-    return GeorgiaMH.deploy("Meta History: Georgia", "GMH", 65,
+    return GeorgiaMH.deploy("Meta History: Georgia", "MHG", 65,
                             "uri_base", owner.address, {'from': owner}, publish_source=False)

@@ -5,7 +5,7 @@ pragma solidity 0.8.7;
 import "./ERC721xyz.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/access/Ownable.sol";
 
-contract GeorgiaMH  is ERC721xyz, Ownable {
+contract GeorgiaMH is ERC721xyz, Ownable {
 
     string private baseURI;
     bool internal isLockedURI;
