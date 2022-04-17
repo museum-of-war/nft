@@ -23,8 +23,7 @@ def main():
     # deployer_account = accounts[0]
 
     # If deploying on mainnet, use .load method
-    #deployer_account = accounts.load('mainnet')
-    deployer_account = accounts.load('rinkeby_test_account')
+    deployer_account = accounts.load('mainnet')
 
     publish_source = True
 
