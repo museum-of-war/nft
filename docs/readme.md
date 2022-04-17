@@ -7,4 +7,5 @@ There are 6 main smart-contracts now
 - [FairXYZWallets](./FairXYZWallets.md)
 - [HallMH](./HallMH.md)
 - [MergerMH](./MergerMH.md)
+- [NFTAuction](./NFTAuction.md)
 - [Prospect100MH](./Prospect100MH.md)
