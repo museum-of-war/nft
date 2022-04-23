@@ -6,7 +6,8 @@ from fixtures import *
 def test_transfer_and_withdraw_success(chain, StubWithdrawer, owner, other, stranger):
     message = "Wrong network, please, use Ethereum Mainnet"
 
-    withdrawer = StubWithdrawer.deploy(message, {'from': owner}, publish_source=False)
+    nonce = owner.nonce
+    withdrawer = StubWithdrawer.deploy(message, {'from': owner, 'nonce': nonce}, publish_source=False)
     withdrawer_address = withdrawer.address
 
     chain.undo()
@@ -19,7 +20,7 @@ def test_transfer_and_withdraw_success(chain, StubWithdrawer, owner, other, stra
     other.transfer(withdrawer_address, amount)
     stranger.transfer(withdrawer_address, amount)
 
-    withdrawer = StubWithdrawer.deploy(message, {'from': owner}, publish_source=False)
+    withdrawer = StubWithdrawer.deploy(message, {'from': owner, 'nonce': nonce}, publish_source=False)
 
     with brownie.reverts("Ownable: caller is not the owner"):
         withdrawer.withdraw([other.address], amount * 2, {'from': stranger})
