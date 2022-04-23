@@ -6,3 +6,7 @@ build/
 reports/
 .DS_store
 scripts/__pycache__/
+/cache/
+/.openzeppelin/
+/artifacts/
+keystore.json
