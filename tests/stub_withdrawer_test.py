@@ -31,6 +31,18 @@ def test_transfer_and_withdraw_success(chain, StubWithdrawer, owner, other, stra
     assert stranger_balance_before == stranger.balance()
 
 
+def test_change_message_success(withdrawer, owner):
+    new_message = "Wrong network!"
+    withdrawer.changeMessage(new_message, {'from': owner})
+    assert withdrawer.message() == new_message
+
+
+def test_change_message_invalid_owner(withdrawer, other):
+    new_message = "Wrong network!"
+    with brownie.reverts("Ownable: caller is not the owner"):
+        withdrawer.changeMessage(new_message, {'from': other})
+
+
 def test_receive_revert(withdrawer, other):
     amount = 5 * 10 ** 18
     with brownie.reverts("Wrong network, please, use Ethereum Mainnet"):
