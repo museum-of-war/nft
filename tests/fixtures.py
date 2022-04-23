@@ -76,3 +76,8 @@ def hall(owner, HallMH):
 def georgia(owner, GeorgiaMH):
     return GeorgiaMH.deploy("Meta History: Georgia", "MHG", 65,
                             "uri_base", owner.address, {'from': owner}, publish_source=False)
+
+
+@pytest.fixture
+def withdrawer(owner, StubWithdrawer):
+    return StubWithdrawer.deploy("Wrong network, please, use Ethereum Mainnet", {'from': owner}, publish_source=False)
