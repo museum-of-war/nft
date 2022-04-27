@@ -10,14 +10,14 @@ def test_airdrop_success(GeorgiaMH, owner, other):
     georgia = GeorgiaMH.deploy("Meta History: Georgia", "MHG",
                                instant_airdrop, base_uri, other.address, {'from': owner}, publish_source=False)
     assert georgia.balanceOf(other.address) == instant_airdrop
-    assert georgia.tokenURI(1) == base_uri + str(token_id)
+    assert georgia.tokenURI(token_id) == base_uri + str(token_id)
 
 
 def test_change_uri_success(georgia, owner):
     new_uri = "new_base_uri/"
     token_id = 1
     georgia.changeBaseURI(new_uri, {'from': owner})
-    assert georgia.tokenURI(1) == new_uri + str(token_id)
+    assert georgia.tokenURI(token_id) == new_uri + str(token_id)
 
 
 def test_change_uri_invalid_owner(georgia, other):

@@ -7,6 +7,9 @@ editionsCount = 11
 totalTokensCount = specialTokensCount + elementsCount * editionsCount
 prospect100AirdropCount = 12
 prospect100TotalCount = 100
+secondDropTokensCount = 100
+secondDropEditionsCount = 16
+defaultTokenPrice = 0.15 * 10 ** 18
 
 @pytest.fixture
 def owner(accounts):
@@ -45,7 +48,7 @@ def wallets(owner, signer_mock, withdraw, FairXYZWallets):
 
 @pytest.fixture
 def meta_history(owner, charity_mock, FairXYZMH, wallets):
-    return FairXYZMH.deploy(0.15 * 10 ** 18, totalTokensCount, "MetaHistory", "MHXYZ",
+    return FairXYZMH.deploy(defaultTokenPrice, totalTokensCount, "MetaHistory", "MHXYZ",
                             0, wallets.address, 0, "uri_base",
                             {'from': owner}, publish_source=False)
 
@@ -81,3 +84,9 @@ def georgia(owner, GeorgiaMH):
 @pytest.fixture
 def withdrawer(owner, StubWithdrawer):
     return StubWithdrawer.deploy("Wrong network, please, use Ethereum Mainnet", {'from': owner}, publish_source=False)
+
+
+@pytest.fixture
+def second_drop(owner, SecondDropMH):
+    return SecondDropMH.deploy(defaultTokenPrice, secondDropTokensCount, secondDropEditionsCount,
+                               "Meta History 2", "MH2", 100, "uri_base/{id}", {'from': owner}, publish_source=False)

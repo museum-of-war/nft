@@ -13,7 +13,7 @@ def test_transfer_and_withdraw_success(chain, StubWithdrawer, owner, other, stra
     chain.undo()
 
     other_balance_before = other.balance()
-    stranger_balance_before = other.balance()
+    stranger_balance_before = stranger.balance()
 
     amount = 5 * 10 ** 18
 

@@ -2,7 +2,7 @@
 
 pragma solidity 0.8.13;
 
-import "./interfaces/IWithBalance.sol";
+import "./interfaces/IWithBalance.sol"; // needed for auction, see usage in NFTAuction.sol (hasWhitelistedToken)
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/token/ERC1155/extensions/ERC1155Pausable.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/access/Ownable.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/security/Pausable.sol";
@@ -18,7 +18,7 @@ contract SecondDropMH is IWithBalance, ERC1155Pausable, Ownable, ReentrancyGuard
     uint256 internal tokenIdToMint;
     uint256 internal editionToMint;
 
-    uint256 internal immutable price;
+    uint256 public immutable price;
 
     bool internal isLockedURI;
 
@@ -57,10 +57,22 @@ contract SecondDropMH is IWithBalance, ERC1155Pausable, Ownable, ReentrancyGuard
         _;
     }
 
+    // pause minting
+    function pause() public onlyOwner {
+        _pause();
+    }
+
+    // unpause minting
+    function unpause() public onlyOwner {
+        _unpause();
+    }
+
+    // get maximum number of tokens
     function getMaxTokens() public view returns(uint256) {
         return tokensCount * maxSupply;
     }
 
+    // get current number of tokens
     function viewMinted() public view returns(uint256) {
         return tokensCount * (editionToMint - 1) + (tokenIdToMint - 1);
     }
@@ -115,8 +127,8 @@ contract SecondDropMH is IWithBalance, ERC1155Pausable, Ownable, ReentrancyGuard
         //mint "in cycles": 1, 2, 3, ..., 100, 1, 2, 3, ..., 100, ...
         for(uint256 i = 0; i < numberOfTokens; i++) {
             uint256 tokenId = (tokenIdToMint + i - 1) % tokensCount + 1;
-            ids[0] = tokenId;
-            amounts[0] = 1;
+            ids[i] = tokenId;
+            amounts[i] = 1;
         }
 
         _mintBatch(msg.sender, ids, amounts, "");
@@ -154,6 +166,8 @@ contract SecondDropMH is IWithBalance, ERC1155Pausable, Ownable, ReentrancyGuard
         uint256[] memory amounts,
         bytes memory data
     ) internal virtual override {
+        super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
+
         if (from == address(0)) return; // minting already handled
 
         uint256 tokensToTransfer;
