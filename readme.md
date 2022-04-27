@@ -38,7 +38,9 @@ All logic for contract constructors and deployment with relevant comments can be
 
 To test contracts:
 
-<i> brownie test </i>
+```
+brownie test 
+```
 
 To deploy contracts:
 
