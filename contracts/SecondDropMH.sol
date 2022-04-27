@@ -38,6 +38,8 @@ contract SecondDropMH is IWithBalance, ERC1155Pausable, Ownable, ReentrancyGuard
     //for ERC1155Supply
     mapping(uint256 => uint256) private _totalSupply;
 
+    uint256 public burntTokens;
+
     constructor(uint256 price_, uint256 tokensCount_, uint256 maxSupply_, string memory name_, string memory symbol_,
                         uint256 maxMintsPerWallet_, string memory baseURI_) ERC1155(baseURI_) {
         price = price_;
@@ -75,9 +77,14 @@ contract SecondDropMH is IWithBalance, ERC1155Pausable, Ownable, ReentrancyGuard
         return _totalSupply[id];
     }
 
+    // Total amount of tokens
+    function totalSupply() public view virtual returns (uint256) {
+        return viewMinted() - burntTokens;
+    }
+
     // Indicates whether any token exist with a given id, or not
     function exists(uint256 id) public view virtual returns (bool) {
-        return SecondDropMH.totalSupply(id) > 0;
+        return totalSupply(id) > 0;
     }
 
     // get maximum number of tokens
@@ -174,6 +181,7 @@ contract SecondDropMH is IWithBalance, ERC1155Pausable, Ownable, ReentrancyGuard
             _totalSupply[id] = _totalSupply[id] - amount;
         }
         _burn(from, id, amount);
+        burntTokens += amount;
     }
 
     function _beforeTokenTransfer(
