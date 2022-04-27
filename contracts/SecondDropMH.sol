@@ -35,6 +35,9 @@ contract SecondDropMH is IWithBalance, ERC1155Pausable, Ownable, ReentrancyGuard
     // Mapping owner address to token count
     mapping(address => uint256) private _totalBalances;
 
+    //for ERC1155Supply
+    mapping(uint256 => uint256) private _totalSupply;
+
     constructor(uint256 price_, uint256 tokensCount_, uint256 maxSupply_, string memory name_, string memory symbol_,
                         uint256 maxMintsPerWallet_, string memory baseURI_) ERC1155(baseURI_) {
         price = price_;
@@ -65,6 +68,16 @@ contract SecondDropMH is IWithBalance, ERC1155Pausable, Ownable, ReentrancyGuard
     // unpause minting
     function unpause() public onlyOwner {
         _unpause();
+    }
+
+    // Total amount of tokens in with a given id
+    function totalSupply(uint256 id) public view virtual returns (uint256) {
+        return _totalSupply[id];
+    }
+
+    // Indicates whether any token exist with a given id, or not
+    function exists(uint256 id) public view virtual returns (bool) {
+        return SecondDropMH.totalSupply(id) > 0;
     }
 
     // get maximum number of tokens
@@ -129,6 +142,7 @@ contract SecondDropMH is IWithBalance, ERC1155Pausable, Ownable, ReentrancyGuard
             uint256 tokenId = (tokenIdToMint + i - 1) % tokensCount + 1;
             ids[i] = tokenId;
             amounts[i] = 1;
+            _totalSupply[tokenId] += 1;
         }
 
         _mintBatch(msg.sender, ids, amounts, "");
@@ -155,6 +169,10 @@ contract SecondDropMH is IWithBalance, ERC1155Pausable, Ownable, ReentrancyGuard
         uint256 amount
     ) external {
         require(msg.sender == burner, "Only burner can burn tokens");
+        require(_totalSupply[id] >= amount, "ERC1155: burn amount exceeds totalSupply");
+        unchecked {
+            _totalSupply[id] = _totalSupply[id] - amount;
+        }
         _burn(from, id, amount);
     }
 
