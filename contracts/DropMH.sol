@@ -125,21 +125,14 @@ contract DropMH is IWithBalance, ERC1155Pausable, Ownable, ReentrancyGuard {
         return _totalBalances[owner];
     }
 
-    // Mint tokens
-    function mint(uint256 numberOfTokens)
-        payable
-        public
+    // Mint tokens to address
+    function _mintTo(uint256 numberOfTokens, address to)
+        internal
         whenNotPaused
         saleIsOpen
-        nonReentrant
         returns (uint256)
     {
         require(viewMinted() + numberOfTokens <= getMaxTokens(), "This amount exceeds the maximum number of NFTs on sale!");
-        require(msg.value >= price * numberOfTokens, "You have not sent the required amount of ETH");
-        require(numberOfTokens <= tokensCount, "Token minting limit per transaction exceeded");
-
-        if(maxMintsPerWallet > 0)
-            require(mintsPerWallet[msg.sender] + numberOfTokens <= maxMintsPerWallet, "Exceeds number of mints per wallet");
 
         uint256[] memory ids = new uint256[](numberOfTokens);
         uint256[] memory amounts = new uint256[](numberOfTokens);
@@ -152,8 +145,8 @@ contract DropMH is IWithBalance, ERC1155Pausable, Ownable, ReentrancyGuard {
             _totalSupply[tokenId] += 1;
         }
 
-        _mintBatch(msg.sender, ids, amounts, "");
-        _totalBalances[msg.sender] += numberOfTokens;
+        _mintBatch(to, ids, amounts, "");
+        _totalBalances[to] += numberOfTokens;
 
         uint256 nextToMint = tokenIdToMint + numberOfTokens;
         if (nextToMint > tokensCount) {
@@ -165,9 +158,39 @@ contract DropMH is IWithBalance, ERC1155Pausable, Ownable, ReentrancyGuard {
         }
 
         if(maxMintsPerWallet > 0)
-            mintsPerWallet[msg.sender] += numberOfTokens;
+            mintsPerWallet[to] += numberOfTokens;
 
         return viewMinted();
+    }
+
+    // Mint tokens
+    function mint(uint256 numberOfTokens)
+        payable
+        external
+        whenNotPaused
+        saleIsOpen
+        nonReentrant
+        returns (uint256)
+    {
+        require(msg.value >= price * numberOfTokens, "You have not sent the required amount of ETH");
+        require(numberOfTokens <= tokensCount, "Token minting limit per transaction exceeded");
+
+        if(maxMintsPerWallet > 0)
+            require(mintsPerWallet[msg.sender] + numberOfTokens <= maxMintsPerWallet, "Exceeds number of mints per wallet");
+
+        return _mintTo(numberOfTokens, msg.sender);
+    }
+
+    // Airdrop tokens
+    function airdrop(uint256 numberOfTokens, address to)
+        external
+        onlyOwner
+        whenNotPaused
+        saleIsOpen
+        nonReentrant
+        returns (uint256)
+    {
+        return _mintTo(numberOfTokens, to);
     }
 
     function burn(

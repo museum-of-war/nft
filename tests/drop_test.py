@@ -9,6 +9,22 @@ def test_is_paused_after_deploy(drop, other):
         drop.mint(1, {'from': other})
 
 
+def test_airdrop_success(drop, owner, other):
+    tokens_count = 10
+    drop.unpause()
+    drop.airdrop(tokens_count, other.address, {'from': owner})
+    assert drop.balanceOf(other.address) == tokens_count
+    assert drop.viewMinted() == tokens_count
+
+
+def test_airdrop_invalid_owner(drop, other):
+    tokens_count = 10
+    drop.unpause()
+
+    with brownie.reverts("Ownable: caller is not the owner"):
+        drop.airdrop(tokens_count, other.address, {'from': other})
+
+
 def test_mint(drop, other):
     tokens_count = 10
     price = drop.price() * tokens_count
