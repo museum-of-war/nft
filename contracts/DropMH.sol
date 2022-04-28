@@ -8,7 +8,7 @@ import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/access/Ownable.sol"
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/security/Pausable.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/security/ReentrancyGuard.sol";
 
-contract SecondDropMH is IWithBalance, ERC1155Pausable, Ownable, ReentrancyGuard {
+contract DropMH is IWithBalance, ERC1155Pausable, Ownable, ReentrancyGuard {
     string public name;
     string public symbol;
 

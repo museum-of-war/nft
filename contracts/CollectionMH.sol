@@ -5,17 +5,16 @@ pragma solidity 0.8.7;
 import "./ERC721xyz.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/access/Ownable.sol";
 
-contract GeorgiaMH is ERC721xyz, Ownable {
-
+contract CollectionMH is ERC721xyz, Ownable {
     string private baseURI;
     bool internal isLockedURI;
 
     constructor(string memory name_, string memory symbol_,
-                uint256 tokens_count, string memory URI_base,
-                address receiver) payable ERC721xyz(name_, symbol_) {
-        baseURI = URI_base;
+                uint256 tokensCount_, string memory baseURI_,
+                address receiver_) ERC721xyz(name_, symbol_) {
+        baseURI = baseURI_;
         // Instant airdrop
-        _mint(receiver, tokens_count);
+        _mint(receiver_, tokensCount_);
     }
 
     // return Base URI
@@ -29,8 +28,8 @@ contract GeorgiaMH is ERC721xyz, Ownable {
     }
 
     // modify the base URI
-    function changeBaseURI(string memory new_base_URI) onlyOwner public {
+    function changeBaseURI(string memory newBaseURI) onlyOwner public {
         require(!isLockedURI, "URI change has been locked");
-        baseURI = new_base_URI;
+        baseURI = newBaseURI;
     }
 }

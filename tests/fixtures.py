@@ -76,8 +76,8 @@ def hall(owner, HallMH):
 
 
 @pytest.fixture
-def georgia(owner, GeorgiaMH):
-    return GeorgiaMH.deploy("Meta History: Georgia", "MHG", 65,
+def collection(owner, CollectionMH):
+    return CollectionMH.deploy("Meta History: Georgia", "MHG", 65,
                             "uri_base", owner.address, {'from': owner}, publish_source=False)
 
 
@@ -87,6 +87,6 @@ def withdrawer(owner, StubWithdrawer):
 
 
 @pytest.fixture
-def second_drop(owner, SecondDropMH):
-    return SecondDropMH.deploy(defaultTokenPrice, secondDropTokensCount, secondDropEditionsCount,
+def drop(owner, DropMH):
+    return DropMH.deploy(defaultTokenPrice, secondDropTokensCount, secondDropEditionsCount,
                                "Meta History 2", "MH2", 100, "uri_base/{id}", {'from': owner}, publish_source=False)

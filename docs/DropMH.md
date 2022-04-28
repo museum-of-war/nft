@@ -1,6 +1,7 @@
-# [SecondDropMH](/contracts/SecondDropMH.sol) - smart contract for second drop (Warline continuation)
+# [DropMH](/contracts/DropMH.sol) - smart contract for second drop (Warline continuation)
 
-SecondDropMH contract is used for second drop on Meta History: Warline.
+DropMH contract is used for second drop on Meta History: Warline.
+It may be also used for all next drops.  
 
 This contract is based on ERC1155.
 Second drop contains 100 events with 16 copies
