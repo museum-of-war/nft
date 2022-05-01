@@ -12,3 +12,4 @@ There are some main smart-contracts now
 - [NFTAuction](./NFTAuction.md)
 - [Prospect100MH](./Prospect100MH.md)
 - [StubWithdrawer](./StubWithdrawer.md)
+- [WithdrawSplitter](./WithdrawSplitter.md)

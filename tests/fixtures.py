@@ -42,6 +42,11 @@ def stranger(accounts):
 
 
 @pytest.fixture
+def artist(accounts):
+    return accounts[6]
+
+
+@pytest.fixture
 def wallets(owner, signer_mock, withdraw, FairXYZWallets):
     return FairXYZWallets.deploy(signer_mock, withdraw, {'from': owner}, publish_source=False)
 
@@ -89,4 +94,9 @@ def withdrawer(owner, StubWithdrawer):
 @pytest.fixture
 def drop(owner, DropMH):
     return DropMH.deploy(defaultTokenPrice, secondDropTokensCount, secondDropEditionsCount,
-                               "Meta History 2", "MH2", 100, "uri_base/{id}", {'from': owner}, publish_source=False)
+                         "Meta History 2", "MH2", 100, "uri_base/{id}", {'from': owner}, publish_source=False)
+
+
+@pytest.fixture
+def withdraw_splitter(owner, WithdrawSplitter):
+    return WithdrawSplitter.deploy(artist.address, 100, 75, {'from': owner}, publish_source=False)
