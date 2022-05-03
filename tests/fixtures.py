@@ -3,13 +3,14 @@ import pytest
 
 specialTokensCount = 4
 elementsCount = 9
-editionsCount = 11
+editionsCount = 16
 totalTokensCount = specialTokensCount + elementsCount * editionsCount
 prospect100AirdropCount = 12
 prospect100TotalCount = 100
 secondDropTokensCount = 100
 secondDropEditionsCount = 16
 defaultTokenPrice = 0.15 * 10 ** 18
+
 
 @pytest.fixture
 def owner(accounts):

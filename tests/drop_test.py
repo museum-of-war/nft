@@ -119,33 +119,3 @@ def test_change_uri_locked_error(drop, owner):
     new_uri = "new_base_uri/{id}"
     with brownie.reverts("URI change has been locked"):
         drop.changeBaseURI(new_uri, {'from': owner})
-
-
-def test_set_burner_success(drop, owner, other):
-    drop.setBurner(other.address, {'from': owner})
-    assert drop.burner() == other.address
-
-
-def test_set_burner_invalid_owner(drop, other):
-    with brownie.reverts("Ownable: caller is not the owner"):
-        drop.setBurner(other.address, {'from': other})
-
-
-def test_burn_success(drop, owner, other, stranger):
-    drop.setBurner(other.address, {'from': owner})
-    drop.unpause()
-
-    drop.mint(1, {'from': stranger, 'value': drop.price()})
-
-    drop.burn(stranger.address, 1, 1, {'from': other})
-    assert drop.balanceOf(stranger.address, 1) == 0
-
-
-def test_burn_invalid_account(drop, owner, other, stranger):
-    with brownie.reverts("Only burner can burn tokens"):
-        drop.burn(other.address, 1, 1, {'from': stranger})
-
-    drop.setBurner(other.address, {'from': owner})
-
-    with brownie.reverts("Only burner can burn tokens"):
-        drop.burn(other.address, 1, 1, {'from': stranger})

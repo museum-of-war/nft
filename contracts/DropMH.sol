@@ -3,12 +3,12 @@
 pragma solidity 0.8.13;
 
 import "./interfaces/IWithBalance.sol"; // needed for auction, see usage in NFTAuction.sol (hasWhitelistedToken)
-import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/token/ERC1155/extensions/ERC1155Pausable.sol";
+import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/token/ERC1155/ERC1155.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/access/Ownable.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/security/Pausable.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/security/ReentrancyGuard.sol";
 
-contract DropMH is IWithBalance, ERC1155Pausable, Ownable, ReentrancyGuard {
+contract DropMH is IWithBalance, ERC1155, Pausable, Ownable, ReentrancyGuard {
     string public name;
     string public symbol;
 
@@ -24,21 +24,14 @@ contract DropMH is IWithBalance, ERC1155Pausable, Ownable, ReentrancyGuard {
 
     address public constant ukraineAddress = 0x165CD37b4C644C2921454429E7F9358d18A45e14;
 
-    // smart-contract that can burn tokens (Merger as example)
-    address public burner;
-
     // set this number to 0 for unlimited mints per wallet
     uint256 internal maxMintsPerWallet;
 
     mapping(address => uint256) internal mintsPerWallet;
-
     // Mapping owner address to token count
     mapping(address => uint256) private _totalBalances;
-
     //for ERC1155Supply
     mapping(uint256 => uint256) private _totalSupply;
-
-    uint256 public burntTokens;
 
     constructor(uint256 price_, uint256 tokensCount_, uint256 maxSupply_, string memory name_, string memory symbol_,
                         uint256 maxMintsPerWallet_, string memory baseURI_) ERC1155(baseURI_) {
@@ -63,12 +56,12 @@ contract DropMH is IWithBalance, ERC1155Pausable, Ownable, ReentrancyGuard {
     }
 
     // pause minting
-    function pause() public onlyOwner {
+    function pause() external onlyOwner {
         _pause();
     }
 
     // unpause minting
-    function unpause() public onlyOwner {
+    function unpause() external onlyOwner {
         _unpause();
     }
 
@@ -79,7 +72,7 @@ contract DropMH is IWithBalance, ERC1155Pausable, Ownable, ReentrancyGuard {
 
     // Total amount of tokens
     function totalSupply() public view virtual returns (uint256) {
-        return viewMinted() - burntTokens;
+        return viewMinted();
     }
 
     // Indicates whether any token exist with a given id, or not
@@ -100,11 +93,6 @@ contract DropMH is IWithBalance, ERC1155Pausable, Ownable, ReentrancyGuard {
     // Lock metadata forever
     function lockURI() external onlyOwner {
         isLockedURI = true;
-    }
-
-    // Set address that can burn tokens (can be used for "merging")
-    function setBurner(address burner_) external onlyOwner {
-        burner = burner_;
     }
 
     // modify the base URI
@@ -191,20 +179,6 @@ contract DropMH is IWithBalance, ERC1155Pausable, Ownable, ReentrancyGuard {
         returns (uint256)
     {
         return _mintTo(numberOfTokens, to);
-    }
-
-    function burn(
-        address from,
-        uint256 id,
-        uint256 amount
-    ) external {
-        require(msg.sender == burner, "Only burner can burn tokens");
-        require(_totalSupply[id] >= amount, "ERC1155: burn amount exceeds totalSupply");
-        unchecked {
-            _totalSupply[id] = _totalSupply[id] - amount;
-        }
-        _burn(from, id, amount);
-        burntTokens += amount;
     }
 
     function _beforeTokenTransfer(

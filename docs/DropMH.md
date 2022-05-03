@@ -5,8 +5,7 @@ It may be also used for all next drops.
 
 This contract is based on ERC1155.
 Second drop contains 100 events with 16 copies
-(1600 tokens total, see `tokensCount`, `maxSupply` and `getMaxTokens`). 
-Also, now it is possible to add `burner` address (see `setBurner`) - a smart-contract that will be used for merging.
+(1600 tokens total, see `tokensCount`, `maxSupply` and `getMaxTokens`).
 As in the first drop, elements are minted "in cycles": 1, 2, 3, ..., 100, 1, 2, ..., 100 and so on.
 
 Also, it is possible to set the maximum number of mints per wallet (see `maxMintsPerWallet`).

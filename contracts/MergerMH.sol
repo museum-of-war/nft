@@ -2,8 +2,8 @@
 
 pragma solidity 0.8.7;
 
-import 'OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/token/ERC721/IERC721.sol';
-import 'OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/token/ERC721/ERC721.sol';
+import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/token/ERC721/IERC721.sol";
+import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/token/ERC721/ERC721.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/access/Ownable.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/security/ReentrancyGuard.sol";
 import "./interfaces/ISimpleLimitedMinter.sol";
@@ -20,7 +20,7 @@ contract MergerMH is ERC721, Ownable, ReentrancyGuard {
     uint16 internal immutable offset; //NFTs that don't take part in merging
     uint16 internal immutable elementsCount;
     uint16 internal immutable editionsCount;
-    uint16[] internal /*immutable*/ startTokenIds;
+    uint16[] internal startTokenIds;
 
     constructor(string memory name_, string memory symbol_,
                 address nftAddress_, address rewardAddress_, string memory baseURI_,
@@ -62,14 +62,14 @@ contract MergerMH is ERC721, Ownable, ReentrancyGuard {
 
     function getTokenInfo(uint256 tokenId) external view returns (uint256 tokenNumber, uint256 level) {
         uint256 totalMergesCount = editionsCount - 1; // explained in constructor
-        uint256 elementIndex = tokenId / totalMergesCount;
+        uint256 elementIndex = (tokenId - 1) / totalMergesCount;
         tokenNumber = elementIndex + offset + 1; // start from 1
 
         uint256 elementOffset = elementIndex * totalMergesCount;
-        for (uint256 i = 0; i < startTokenIds.length - 1; i++) {
-            uint256 nextLevelId = elementOffset + startTokenIds[i + 1];
+        for (uint256 i = 1; i < startTokenIds.length; i++) { // level starts from 1
+            uint256 nextLevelId = elementOffset + startTokenIds[i];
             if (tokenId >= nextLevelId) continue;
-            return (tokenNumber, i + 1); // level starts from 1
+            return (tokenNumber, i);
         }
 
         return (tokenNumber, startTokenIds.length); // level starts from 1
@@ -84,7 +84,6 @@ contract MergerMH is ERC721, Ownable, ReentrancyGuard {
             }
         }
         require(countToMerge >= 2, "Not enough tokens");
-        //require(countToMerge == tokenIds.length, "Wrong tokens count");
         require(msg.sender == tx.origin, "Sender must be a wallet");
 
         IERC721 nftContract = IERC721(nftAddress);
@@ -98,8 +97,8 @@ contract MergerMH is ERC721, Ownable, ReentrancyGuard {
             for(uint256 j = i + 1; j < countToMerge; j++) {
                 require(tokenId != tokenIds[j], "Cannot merge token with self");
             }
-            //tokenId = offset + elementsCount * editionIndex + elementId
-            //elementIndex = elementId - 1
+            // tokenId can be calculated with this formula: tokenId = offset + elementsCount * editionIndex + elementId
+            // index is 1 less than the identifier: elementIndex = elementId - 1
             if (i == 0) {
                 elementIndex = (tokenId - offset - 1) % elementsCount;
             } else {
@@ -119,16 +118,16 @@ contract MergerMH is ERC721, Ownable, ReentrancyGuard {
 
         for (uint256 mintingTokenId = elementOffset + startTokenIds[level - 1]; mintingTokenId < endId; mintingTokenId++) {
             if (_exists(mintingTokenId)) continue; // trying to find next token id
-            // burning
+            // burning merged tokens
             for (uint256 i = 0; i < countToMerge; i++) {
                 nftContract.transferFrom(msg.sender, burnAddress, tokenIds[i]);
             }
 
             _mint(msg.sender, mintingTokenId);
              // reward user
-            if (level > 1) { // only 4+ tokens
+            if (level > 1) { // can be rewarded only for 4+ tokens
                 uint256 rewardsCount = (countToMerge >> 1) - 1; // 4 -> 1 (start), 8 -> 3 (3 rewards: for 4, 4, and 8)
-                for (uint256 reward = 0; reward < level; reward++) {
+                for (uint256 reward = 0; reward < rewardsCount; reward++) {
                     ISimpleLimitedMinter(rewardAddress).tryMint(msg.sender);
                 }
             }
@@ -160,7 +159,7 @@ contract MergerMH is ERC721, Ownable, ReentrancyGuard {
             uint256 currentLevelId = elementOffset + startTokenIds[level];
             require(tokenId2 >= currentLevelId && tokenId2 < nextLevelId, "Cannot merge different levels");
 
-            // burning
+            // burning merged tokens
             _transfer(msg.sender, burnAddress, tokenId1);
             _transfer(msg.sender, burnAddress, tokenId2);
 

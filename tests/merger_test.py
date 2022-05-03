@@ -3,8 +3,8 @@ import brownie
 from fixtures import *
 
 
-@pytest.mark.parametrize('token_id', [5, 4 + elementsCount, totalTokensCount - 7 * elementsCount])
-@pytest.mark.parametrize('count', [2, 3, 8])
+@pytest.mark.parametrize('token_id', [5, 4 + elementsCount, totalTokensCount - 15 * elementsCount])
+@pytest.mark.parametrize('count', [2, 3, 8, 16])
 def test_merge_base_batch_success(merger, meta_history, prospect100, other, token_id, count):
     meta_history.airdrop([other], totalTokensCount)
     meta_history.setApprovalForAll(merger.address, True, {'from': other})
