@@ -10,6 +10,7 @@ There are some main smart-contracts now
 - [HallMH](./HallMH.md)
 - [MergerMH](./MergerMH.md)
 - [NFTAuction](./NFTAuction.md)
+- [NFTAuctionV2](./NFTAuctionV2.md)
 - [Prospect100MH](./Prospect100MH.md)
 - [StubWithdrawer](./StubWithdrawer.md)
 - [WithdrawSplitter](./WithdrawSplitter.md)
