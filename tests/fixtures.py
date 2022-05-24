@@ -88,6 +88,18 @@ def collection(owner, CollectionMH):
 
 
 @pytest.fixture
+def extended_collection(owner, ExtendedCollectionMH):
+    return ExtendedCollectionMH.deploy("Extended Collection", "MHEC", "contract_uri", "base_uri", 100, owner.address,
+                                       {'from': owner}, publish_source=False)
+
+
+@pytest.fixture
+def single_token(owner, SingleTokenMH):
+    return SingleTokenMH.deploy("Single Token", "MHST", "contract_uri", "base_uri", owner.address,
+                                {'from': owner}, publish_source=False)
+
+
+@pytest.fixture
 def withdrawer(owner, StubWithdrawer):
     return StubWithdrawer.deploy("Wrong network, please, use Ethereum Mainnet", {'from': owner}, publish_source=False)
 
