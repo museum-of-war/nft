@@ -18,3 +18,5 @@ There are some main smart-contracts now
 - [SingleTokenMH](./SingleTokenMH.md)
 - [StubWithdrawer](./StubWithdrawer.md)
 - [WithdrawSplitter](./WithdrawSplitter.md)
+
+You can see the addresses of deployed contracts [here](./Addresses.md).
