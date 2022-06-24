@@ -9,6 +9,8 @@ prospect100AirdropCount = 12
 prospect100TotalCount = 100
 secondDropTokensCount = 100
 secondDropEditionsCount = 16
+thirdDropTokensCount = 100
+thirdDropEditionsCount = 12
 defaultTokenPrice = 0.15 * 10 ** 18
 
 
@@ -108,6 +110,12 @@ def withdrawer(owner, StubWithdrawer):
 def drop(owner, DropMH):
     return DropMH.deploy(defaultTokenPrice, secondDropTokensCount, secondDropEditionsCount,
                          "Meta History 2", "MH2", 100, "uri_base/{id}", {'from': owner}, publish_source=False)
+
+
+@pytest.fixture
+def selective_drop(owner, SelectiveDropMH):
+    return SelectiveDropMH.deploy(defaultTokenPrice, thirdDropTokensCount, thirdDropEditionsCount,
+                                  "Meta History 3", "MH3", 100, "uri_base/{id}", {'from': owner}, publish_source=False)
 
 
 @pytest.fixture

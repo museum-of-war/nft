@@ -15,6 +15,7 @@ There are some main smart-contracts now
 - [NFTAuctionV3](./NFTAuctionV3.md)
 - [NFTSeller](./NFTSeller.md)
 - [Prospect100MH](./Prospect100MH.md)
+- [SelectiveDropMH](./SelectiveDropMH.md)
 - [SingleTokenMH](./SingleTokenMH.md)
 - [StubWithdrawer](./StubWithdrawer.md)
 - [WithdrawSplitter](./WithdrawSplitter.md)

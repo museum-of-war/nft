@@ -1,11 +1,12 @@
-# [DropMH](/contracts/DropMH.sol) - smart contract for second drop (Warline continuation)
+# [SelectiveDropMH](/contracts/SelectiveDropMH.sol) - smart contract for third drop (Warline continuation)
 
-DropMH contract is used for second drop on Meta History: Warline.
+SelectiveDropMH contract is used for third drop on Meta History: Warline.
+It may be also used for all next drops.
 
 This contract is based on ERC1155.
-Second drop contains 100 events with 16 copies
-(1600 tokens total, see `tokensCount`, `maxSupply` and `getMaxTokens`).
-As in the first drop, elements are minted "in cycles": 1, 2, 3, ..., 100, 1, 2, ..., 100 and so on.
+Third drop contains 100 events with 12 copies
+(1200 tokens total, see `tokensCount`, `maxSupply` and `getMaxTokens`).
+The minter can select token ids to mint.
 
 Also, it is possible to set the maximum number of mints per wallet (see `maxMintsPerWallet`).
 
