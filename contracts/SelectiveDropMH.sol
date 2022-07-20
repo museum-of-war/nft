@@ -17,6 +17,8 @@ contract SelectiveDropMH is IWithBalance, ERC1155, Pausable, Ownable, Reentrancy
 
     uint256 public immutable price;
 
+    uint256 public immutable startTime;
+
     bool internal isLockedURI;
 
     address public constant ukraineAddress = 0x165CD37b4C644C2921454429E7F9358d18A45e14;
@@ -31,7 +33,7 @@ contract SelectiveDropMH is IWithBalance, ERC1155, Pausable, Ownable, Reentrancy
     mapping(uint256 => uint256) private _totalSupply;
 
     constructor(uint256 price_, uint256 tokensCount_, uint256 maxSupply_, string memory name_, string memory symbol_,
-                uint256 maxMintsPerWallet_, string memory baseURI_) ERC1155(baseURI_) {
+                uint256 maxMintsPerWallet_, string memory baseURI_, uint256 startTime_) ERC1155(baseURI_) {
         price = price_;
         tokensCount = tokensCount_;
         maxSupply = maxSupply_;
@@ -40,7 +42,7 @@ contract SelectiveDropMH is IWithBalance, ERC1155, Pausable, Ownable, Reentrancy
 
         maxMintsPerWallet = maxMintsPerWallet_;
 
-        _pause();
+        startTime = startTime_;
     }
 
     // pause minting
@@ -133,6 +135,7 @@ contract SelectiveDropMH is IWithBalance, ERC1155, Pausable, Ownable, Reentrancy
         whenNotPaused
         nonReentrant
     {
+        require(block.timestamp >= startTime, "Minting is not started yet!");
         require(msg.value >= price * tokenIds.length, "You have not sent the required amount of ETH");
         require(tokenIds.length <= tokensCount, "Token minting limit per transaction exceeded");
 

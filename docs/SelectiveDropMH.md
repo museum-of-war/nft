@@ -1,12 +1,13 @@
 # [SelectiveDropMH](/contracts/SelectiveDropMH.sol) - smart contract for third drop (Warline continuation)
 
 SelectiveDropMH contract is used for third drop on Meta History: Warline.
-It may be also used for all next drops.
+It may be also used for next drops.
 
 This contract is based on ERC1155.
 Third drop contains 100 events with 12 copies
 (1200 tokens total, see `tokensCount`, `maxSupply` and `getMaxTokens`).
 The minter can select token ids to mint. It is also possible to set the receiver address for minted NFTs (see `mintTo`).
+The minter cannot mint tokens until the `startTime`.
 
 Also, it is possible to set the maximum number of mints per wallet (see `maxMintsPerWallet`).
 

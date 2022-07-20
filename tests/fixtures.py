@@ -115,7 +115,8 @@ def drop(owner, DropMH):
 @pytest.fixture
 def selective_drop(owner, SelectiveDropMH):
     return SelectiveDropMH.deploy(defaultTokenPrice, thirdDropTokensCount, thirdDropEditionsCount,
-                                  "Meta History 3", "MH3", 100, "uri_base/{id}", {'from': owner}, publish_source=False)
+                                  "Meta History 3", "MH3", 100, "uri_base/{id}", 0, {'from': owner},
+                                  publish_source=False)
 
 
 @pytest.fixture

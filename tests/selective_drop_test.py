@@ -4,15 +4,17 @@ import brownie
 from fixtures import *
 
 
-def test_is_paused_after_deploy(selective_drop, other):
-    assert selective_drop.paused()
-    with brownie.reverts("Pausable: paused"):
+def test_cannot_mint_if_not_started(chain, owner, SelectiveDropMH, other):
+    future_timestamp = chain.time() + 3600
+    selective_drop = SelectiveDropMH.deploy(defaultTokenPrice, thirdDropTokensCount, thirdDropEditionsCount,
+                                            "Meta History 3", "MH3", 100, "uri_base/{id}", future_timestamp,
+                                            {'from': owner}, publish_source=False)
+    with brownie.reverts("Minting is not started yet!"):
         selective_drop.mint([1], {'from': other})
 
 
 @pytest.mark.parametrize('tokens_ids', [[1], [1, 2], [7, 7, 7], [1, 50, 100]])
 def test_airdrop_success(selective_drop, owner, other, tokens_ids):
-    selective_drop.unpause()
     selective_drop.airdrop(tokens_ids, other.address, {'from': owner})
     assert selective_drop.viewMinted() == len(tokens_ids)
     assert selective_drop.balanceOf(other.address) == len(tokens_ids)
@@ -27,7 +29,6 @@ def test_airdrop_success(selective_drop, owner, other, tokens_ids):
 
 def test_airdrop_invalid_owner(selective_drop, other):
     tokens_ids = [1, 2, 3]
-    selective_drop.unpause()
 
     with brownie.reverts("Ownable: caller is not the owner"):
         selective_drop.airdrop(tokens_ids, other.address, {'from': other})
@@ -37,7 +38,6 @@ def test_airdrop_invalid_owner(selective_drop, other):
 def test_mint(selective_drop, other, tokens_ids):
     tokens_count = len(tokens_ids)
     price = selective_drop.price() * tokens_count
-    selective_drop.unpause()
     selective_drop.mint(tokens_ids, {'from': other, 'value': price})
     assert selective_drop.balanceOf(other.address) == tokens_count
     assert selective_drop.viewMinted() == tokens_count
@@ -54,7 +54,6 @@ def test_mint(selective_drop, other, tokens_ids):
 def test_mint_to(selective_drop, other, stranger, tokens_ids):
     tokens_count = len(tokens_ids)
     price = selective_drop.price() * tokens_count
-    selective_drop.unpause()
     selective_drop.mintTo(tokens_ids, stranger, {'from': other, 'value': price})
     assert selective_drop.balanceOf(stranger.address) == tokens_count
     assert selective_drop.viewMinted() == tokens_count
@@ -71,7 +70,6 @@ def test_mint_to(selective_drop, other, stranger, tokens_ids):
 def test_mint_out_of_range(selective_drop, other, tokens_ids):
     tokens_count = len(tokens_ids)
     price = selective_drop.price() * tokens_count
-    selective_drop.unpause()
 
     with brownie.reverts("Token ID is out of range!"):
         selective_drop.mint(tokens_ids, {'from': other, 'value': price})
@@ -82,7 +80,6 @@ def test_mint_too_many_same_tokens(selective_drop, other, token_id):
     tokens_count = selective_drop.maxSupply() + 1
     tokens_ids = [token_id] * tokens_count
     price = selective_drop.price() * tokens_count
-    selective_drop.unpause()
 
     with brownie.reverts("This amount exceeds the maximum number of NFTs on sale!"):
         selective_drop.mint(tokens_ids, {'from': other, 'value': price})
@@ -90,7 +87,6 @@ def test_mint_too_many_same_tokens(selective_drop, other, token_id):
 
 def test_balance_after_transfer(selective_drop, other, stranger):
     price = selective_drop.price()
-    selective_drop.unpause()
     selective_drop.mint([1], {'from': other, 'value': price})
     selective_drop.mint([2], {'from': stranger, 'value': price})
     selective_drop.safeTransferFrom(other.address, stranger.address, 1, 1, '0x00', {'from': other})
@@ -101,7 +97,6 @@ def test_balance_after_transfer(selective_drop, other, stranger):
 def test_mint_limit(selective_drop, other):
     tokens_count = selective_drop.tokensCount() + 1
     price = selective_drop.price() * tokens_count
-    selective_drop.unpause()
     token_ids = list(range(1, tokens_count + 1))
 
     with brownie.reverts("Token minting limit per transaction exceeded"):
@@ -110,7 +105,6 @@ def test_mint_limit(selective_drop, other):
 
 def test_mint_not_enough_eth(selective_drop, other):
     token_ids = [1]
-    selective_drop.unpause()
 
     with brownie.reverts("You have not sent the required amount of ETH"):
         selective_drop.mint(token_ids, {'from': other, 'value': 0})
