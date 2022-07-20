@@ -126,10 +126,10 @@ contract SelectiveDropMH is IWithBalance, ERC1155, Pausable, Ownable, Reentrancy
         if(maxMintsPerWallet > 0) mintsPerWallet[to] += tokenIds.length;
     }
 
-    // Mint tokens
-    function mint(uint256[] memory tokenIds)
+    // Mint tokens to address
+    function mintTo(uint256[] memory tokenIds, address to)
         payable
-        external
+        public
         whenNotPaused
         nonReentrant
     {
@@ -137,9 +137,17 @@ contract SelectiveDropMH is IWithBalance, ERC1155, Pausable, Ownable, Reentrancy
         require(tokenIds.length <= tokensCount, "Token minting limit per transaction exceeded");
 
         if(maxMintsPerWallet > 0)
-            require(mintsPerWallet[msg.sender] + tokenIds.length <= maxMintsPerWallet, "Exceeds number of mints per wallet");
+            require(mintsPerWallet[to] + tokenIds.length <= maxMintsPerWallet, "Exceeds number of mints per wallet");
 
-        _mintTo(tokenIds, msg.sender);
+        _mintTo(tokenIds, to);
+    }
+
+    // Mint tokens
+    function mint(uint256[] memory tokenIds)
+        payable
+        external
+    {
+        mintTo(tokenIds, msg.sender);
     }
 
     // Airdrop tokens

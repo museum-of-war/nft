@@ -6,7 +6,7 @@ It may be also used for all next drops.
 This contract is based on ERC1155.
 Third drop contains 100 events with 12 copies
 (1200 tokens total, see `tokensCount`, `maxSupply` and `getMaxTokens`).
-The minter can select token ids to mint.
+The minter can select token ids to mint. It is also possible to set the receiver address for minted NFTs (see `mintTo`).
 
 Also, it is possible to set the maximum number of mints per wallet (see `maxMintsPerWallet`).
 

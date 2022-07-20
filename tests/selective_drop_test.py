@@ -50,6 +50,23 @@ def test_mint(selective_drop, other, tokens_ids):
         assert selective_drop.balanceOf(other.address, token_id) == supply
 
 
+@pytest.mark.parametrize('tokens_ids', [[1], [1, 2], [7, 7, 7], [1, 50, 100]])
+def test_mint_to(selective_drop, other, stranger, tokens_ids):
+    tokens_count = len(tokens_ids)
+    price = selective_drop.price() * tokens_count
+    selective_drop.unpause()
+    selective_drop.mintTo(tokens_ids, stranger, {'from': other, 'value': price})
+    assert selective_drop.balanceOf(stranger.address) == tokens_count
+    assert selective_drop.viewMinted() == tokens_count
+    supplies = {}
+    for token_id in tokens_ids:
+        supplies[token_id] = supplies.get(token_id, 0) + 1
+    for token_id in supplies:
+        supply = supplies[token_id]
+        assert selective_drop.totalSupply(token_id) == supply
+        assert selective_drop.balanceOf(stranger.address, token_id) == supply
+
+
 @pytest.mark.parametrize('tokens_ids', [[0], [0, 1, 2], [0, 0, 0], [100, 101, 10000]])
 def test_mint_out_of_range(selective_drop, other, tokens_ids):
     tokens_count = len(tokens_ids)
