@@ -12,6 +12,7 @@
 - Avatars for Ukraine (A4U): [0x11F0640bdb99E54Cbb7bE40E18460F9c9c16B957](https://etherscan.io/address/0x11f0640bdb99e54cbb7be40e18460f9c9c16b957)
 - Stefania For Ukraine (S4U): [0xA99b2742A0073f933fcf004cfD9d30Ce2A485F89](https://etherscan.io/address/0xa99b2742a0073f933fcf004cfd9d30ce2a485f89)
 - Meta History: High Levels (MHHL) *(first drop merger)*: [0xb43e9576aAb2eE3A02b0721d5466E12217e45Fa2](https://etherscan.io/address/0xb43e9576aab2ee3a02b0721d5466e12217e45fa2)
+- Meta History 3 (MH3) *(third drop)*: [0xe8b95A3A15dAcBe3368BcA1DA71564C2Ec14Ff37](https://etherscan.io/address/0xe8b95A3A15dAcBe3368BcA1DA71564C2Ec14Ff37)
 
 ### Auctions
 
