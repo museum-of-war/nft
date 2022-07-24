@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.13;
+pragma solidity ^0.8.13;
 
 import "./interfaces/IWithBalance.sol"; // needed for auction, see usage in NFTAuction.sol (hasWhitelistedToken)
 import "OpenZeppelin/openzeppelin-contracts@4.0.0//contracts/token/ERC1155/ERC1155.sol";
@@ -110,6 +110,7 @@ contract SelectiveDropMH is IWithBalance, ERC1155, Pausable, Ownable, Reentrancy
     // Mint tokens to address
     function _mintTo(uint256[] memory tokenIds, address to)
         internal
+        virtual
         whenNotPaused
     {
         uint256[] memory amounts = new uint256[](tokenIds.length);
@@ -132,6 +133,7 @@ contract SelectiveDropMH is IWithBalance, ERC1155, Pausable, Ownable, Reentrancy
     function mintTo(uint256[] memory tokenIds, address to)
         payable
         public
+        virtual
         whenNotPaused
         nonReentrant
     {
