@@ -47,4 +47,3 @@ def test_return_ownerships_success(airdrop_batch_seller, meta_history, drop, own
 def test_return_ownerships_wrong_owner(airdrop_batch_seller, other):
     with brownie.reverts("Ownable: caller is not the owner"):
         airdrop_batch_seller.returnOwnerships({'from': other})
-

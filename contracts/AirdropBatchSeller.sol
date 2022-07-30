@@ -39,4 +39,10 @@ contract AirdropBatchSeller is Ownable {
     function buySecondDropTokens(uint256 amount) payable external enoughETH(amount) returns (uint256) {
         return ISimpleAirdropper(secondDrop).airdrop(amount, msg.sender);
     }
+
+    // anybody can withdraw contract balance to ukraineAddress
+    function withdraw() external {
+        uint256 bal_ = address(this).balance;
+        payable(ukraineAddress).transfer(bal_);
+    }
 }
