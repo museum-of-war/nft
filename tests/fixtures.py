@@ -131,3 +131,14 @@ def whitelisted_drop(owner, other, WhitelistedSelectiveDropMH):
 @pytest.fixture
 def withdraw_splitter(owner, WithdrawSplitter):
     return WithdrawSplitter.deploy(artist.address, 100, 75, {'from': owner}, publish_source=False)
+
+
+@pytest.fixture
+def airdrop_batch_seller(owner, AirdropBatchSeller, meta_history, drop):
+    airdrop_batch_seller = AirdropBatchSeller.deploy(meta_history.address, drop.address, defaultTokenPrice,
+                                                     {'from': owner}, publish_source=False)
+    meta_history.unpause({'from': owner})
+    meta_history.transferOwnership(airdrop_batch_seller, {'from': owner})
+    drop.unpause({'from': owner})
+    drop.transferOwnership(airdrop_batch_seller, {'from': owner})
+    return airdrop_batch_seller
