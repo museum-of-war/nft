@@ -24,6 +24,7 @@
 ### Other
 
 - WithdrawSplitter (40/75 to Ukraine and 35/75 to artists): [0x69492b0069d1d6987e38382Be9Ac5bE46A6B49fc](https://etherscan.io/address/0x69492b0069d1d6987e38382be9ac5be46a6b49fc)
+- AirdropBatchSeller (for 1st and 2nd drops): [0x616d0343c6283B8fd7825e25122e65B72560853B](https://etherscan.io/address/0x616d0343c6283B8fd7825e25122e65B72560853B)
 
 ## Wallets
 
