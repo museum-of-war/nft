@@ -2,6 +2,7 @@
 
 There are some main smart-contracts now
 (click on links to see information about them):
+- [AirdropBatchSeller](./AirdropBatchSeller.md)
 - [CollectionMH](./CollectionMH.md)
 - [DropMH](./DropMH.md)
 - [ERC721xyz](ERC721xyz.md)
