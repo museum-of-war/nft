@@ -11,6 +11,7 @@ There are some main smart-contracts now
 - [FairXYZWallets](./FairXYZWallets.md)
 - [HallMH](./HallMH.md)
 - [MergerMH](./MergerMH.md)
+- [MultipleCollectionMH](./MultipleCollectionMH.md)
 - [NFTAuction](./NFTAuction.md)
 - [NFTAuctionV2](./NFTAuctionV2.md)
 - [NFTAuctionV3](./NFTAuctionV3.md)

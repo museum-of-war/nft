@@ -92,6 +92,12 @@ def collection(owner, CollectionMH):
 
 
 @pytest.fixture
+def multiple_collection(owner, MultipleCollectionMH):
+    return MultipleCollectionMH.deploy("Multiple Collection", "MHMC", "uri_base", owner.address, [3] * 38,
+                                       {'from': owner}, publish_source=False)
+
+
+@pytest.fixture
 def extended_collection(owner, ExtendedCollectionMH):
     return ExtendedCollectionMH.deploy("Extended Collection", "MHEC", "contract_uri", "base_uri", 100, owner.address,
                                        {'from': owner}, publish_source=False)
