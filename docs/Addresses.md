@@ -13,6 +13,7 @@
 - Stefania For Ukraine (S4U): [0xA99b2742A0073f933fcf004cfD9d30Ce2A485F89](https://etherscan.io/address/0xa99b2742a0073f933fcf004cfd9d30ce2a485f89)
 - Meta History: High Levels (MHHL) *(first drop merger)*: [0xb43e9576aAb2eE3A02b0721d5466E12217e45Fa2](https://etherscan.io/address/0xb43e9576aab2ee3a02b0721d5466e12217e45fa2)
 - Meta History 3 (MH3) *(third drop)*: [0xe8b95A3A15dAcBe3368BcA1DA71564C2Ec14Ff37](https://etherscan.io/address/0xe8b95A3A15dAcBe3368BcA1DA71564C2Ec14Ff37)
+- The Revival Project by Depositphotos (RPD) *(third drop)*: [0x345be8f46Af5E5358CC4B26c82bFCdCF6e4D7BF0](https://etherscan.io/address/0x345be8f46Af5E5358CC4B26c82bFCdCF6e4D7BF0)
 
 ### Auctions
 
@@ -20,6 +21,7 @@
 - Auction V2: [0xfe30D555F4c31e8D3Dc459bf666405d9343d6b00](https://etherscan.io/address/0xfe30d555f4c31e8d3dc459bf666405d9343d6b00)
 - Auction V3: [0x13093A3e93bFb4d7f65b82eCc4683bCCf72138Df](https://etherscan.io/address/0x13093a3e93bfb4d7f65b82ecc4683bccf72138df)
 - Seller: [0x325F1Cd4ea0f9ee484ea59480ABBa1966c2E1ddf](https://etherscan.io/address/0x325f1cd4ea0f9ee484ea59480abba1966c2e1ddf)
+- Seller V2: [0x3Ebf75BC702Db6110f8a8430D143Da3384155017](https://etherscan.io/address/0x3Ebf75BC702Db6110f8a8430D143Da3384155017)
 
 ### Other
 
