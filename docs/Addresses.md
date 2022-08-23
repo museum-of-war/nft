@@ -36,3 +36,4 @@
 - Cultural restoration wallet: [0xEDd9Fa9ec9247699dB95De38A06f2DcbEed8423a](https://etherscan.io/address/0xEDd9Fa9ec9247699dB95De38A06f2DcbEed8423a)
 - Artists wallet: [0x0c9ff692daD2553Bad91d2D73Ebb6194600B2bEf](https://etherscan.io/address/0x0c9ff692daD2553Bad91d2D73Ebb6194600B2bEf)
 - Kalush & Prytula wallet: [0x557f10757Ef9E28E23E33c82B6d8c035189D7f3f](https://etherscan.io/address/0x557f10757ef9e28e23e33c82b6d8c035189d7f3f)
+- Ministry of Culture and Information Policy of Ukraine wallet ([check](https://donate.arts.gov.ua/)): [0xc47f5F962b6816d204cb6DbFfbC78d146b42d66c](https://etherscan.io/address/0xc47f5F962b6816d204cb6DbFfbC78d146b42d66c)
