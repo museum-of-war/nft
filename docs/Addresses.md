@@ -20,7 +20,7 @@
 - Auction V1: [0x806Ca46e7df33F6C6f4e28839162F8F85755116A](https://etherscan.io/address/0x806ca46e7df33f6c6f4e28839162f8f85755116a) 
 - Auction V2: [0xfe30D555F4c31e8D3Dc459bf666405d9343d6b00](https://etherscan.io/address/0xfe30d555f4c31e8d3dc459bf666405d9343d6b00)
 - Auction V3: [0x13093A3e93bFb4d7f65b82eCc4683bCCf72138Df](https://etherscan.io/address/0x13093a3e93bfb4d7f65b82ecc4683bccf72138df)
-- Seller: [0x325F1Cd4ea0f9ee484ea59480ABBa1966c2E1ddf](https://etherscan.io/address/0x325f1cd4ea0f9ee484ea59480abba1966c2e1ddf)
+- Seller V1: [0x325F1Cd4ea0f9ee484ea59480ABBa1966c2E1ddf](https://etherscan.io/address/0x325f1cd4ea0f9ee484ea59480abba1966c2e1ddf)
 - Seller V2: [0x3Ebf75BC702Db6110f8a8430D143Da3384155017](https://etherscan.io/address/0x3Ebf75BC702Db6110f8a8430D143Da3384155017)
 
 ### Other
@@ -32,8 +32,8 @@
 
 - Meta History Deployer: [0xfD429C4499AEbB0165D3550b23796Fa346b2d8C8](https://etherscan.io/address/0xfd429c4499aebb0165d3550b23796fa346b2d8c8)
 - Meta History Donation: [0x98c30d4B65b2A0ab0838E7b1E09352c0FD70736C](https://etherscan.io/address/0x98c30d4b65b2a0ab0838e7b1e09352c0fd70736c)
-- Ukraine Crypto Donation **(Official)**: [0x165CD37b4C644C2921454429E7F9358d18A45e14](https://etherscan.io/address/0x165cd37b4c644c2921454429e7f9358d18a45e14)
+- Ukraine Crypto Donation ([source](https://twitter.com/ukraine/status/1497594592438497282)): [0x165CD37b4C644C2921454429E7F9358d18A45e14](https://etherscan.io/address/0x165cd37b4c644c2921454429e7f9358d18a45e14)
 - Cultural restoration wallet: [0xEDd9Fa9ec9247699dB95De38A06f2DcbEed8423a](https://etherscan.io/address/0xEDd9Fa9ec9247699dB95De38A06f2DcbEed8423a)
 - Artists wallet: [0x0c9ff692daD2553Bad91d2D73Ebb6194600B2bEf](https://etherscan.io/address/0x0c9ff692daD2553Bad91d2D73Ebb6194600B2bEf)
-- Kalush & Prytula wallet: [0x557f10757Ef9E28E23E33c82B6d8c035189D7f3f](https://etherscan.io/address/0x557f10757ef9e28e23e33c82b6d8c035189d7f3f)
-- Ministry of Culture and Information Policy of Ukraine wallet ([check](https://donate.arts.gov.ua/)): [0xc47f5F962b6816d204cb6DbFfbC78d146b42d66c](https://etherscan.io/address/0xc47f5F962b6816d204cb6DbFfbC78d146b42d66c)
+- Kalush & Prytula Wallet ([source](https://twitter.com/OlenaHalushka/status/1529564859121246208)): [0x557f10757Ef9E28E23E33c82B6d8c035189D7f3f](https://etherscan.io/address/0x557f10757ef9e28e23e33c82b6d8c035189d7f3f)
+- Save Ukrainian Culture ([source](https://donate.arts.gov.ua/)): [0xc47f5F962b6816d204cb6DbFfbC78d146b42d66c](https://etherscan.io/address/0xc47f5F962b6816d204cb6DbFfbC78d146b42d66c)
