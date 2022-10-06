@@ -13,6 +13,8 @@ thirdDropTokensCount = 100
 thirdDropEditionsCount = 12
 fourthDropTokensCount = 100
 fourthDropEditionsCount = 8
+fifthDropTokensCount = 100
+fifthDropEditionsCount = 4
 defaultTokenPrice = 0.15 * 10 ** 18
 
 
@@ -132,6 +134,14 @@ def whitelisted_drop(owner, other, WhitelistedSelectiveDropMH):
     return WhitelistedSelectiveDropMH.deploy(defaultTokenPrice, fourthDropTokensCount, fourthDropEditionsCount,
                                              "Meta History 4", "MH4", 1, "uri_base/{id}", 0, [other], {'from': owner},
                                              publish_source=False)
+
+
+@pytest.fixture
+def selective_drop_v2(owner, SelectiveDropMHv2):
+    return SelectiveDropMHv2.deploy(defaultTokenPrice, fifthDropTokensCount, fifthDropEditionsCount,
+                                    "Meta History 5", "MH5", 100, "uri_base/{id}", 0,
+                                    "0xc47f5F962b6816d204cb6DbFfbC78d146b42d66c", {'from': owner},
+                                    publish_source=False)
 
 
 @pytest.fixture
