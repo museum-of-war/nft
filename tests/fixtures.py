@@ -145,8 +145,14 @@ def selective_drop_v2(owner, SelectiveDropMHv2):
 
 
 @pytest.fixture
-def withdraw_splitter(owner, WithdrawSplitter):
+def withdraw_splitter(owner, artist, WithdrawSplitter):
     return WithdrawSplitter.deploy(artist.address, 100, 75, {'from': owner}, publish_source=False)
+
+
+@pytest.fixture
+def withdraw_splitter_v2(owner, charity_mock, signer_mock, artist, WithdrawSplitterV2):
+    return WithdrawSplitterV2.deploy([charity_mock.address, signer_mock.address, artist.address], [80, 10, 10],
+                                     {'from': owner}, publish_source=False)
 
 
 @pytest.fixture
