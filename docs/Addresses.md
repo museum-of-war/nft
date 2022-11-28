@@ -39,3 +39,5 @@
 - Artists wallet: [0x0c9ff692daD2553Bad91d2D73Ebb6194600B2bEf](https://etherscan.io/address/0x0c9ff692daD2553Bad91d2D73Ebb6194600B2bEf)
 - Kalush & Prytula Wallet ([source](https://twitter.com/OlenaHalushka/status/1529564859121246208)): [0x557f10757Ef9E28E23E33c82B6d8c035189D7f3f](https://etherscan.io/address/0x557f10757ef9e28e23e33c82b6d8c035189d7f3f)
 - Save Ukrainian Culture ([source](https://donate.arts.gov.ua/)): [0xc47f5F962b6816d204cb6DbFfbC78d146b42d66c](https://etherscan.io/address/0xc47f5F962b6816d204cb6DbFfbC78d146b42d66c)
+- ZINAIDA Artist Wallet: [0xb4b382735cf3606aa3b24888b2aa89dd02bc63b0](https://etherscan.io/address/0xb4b382735cf3606aa3b24888b2aa89dd02bc63b0)
+- VESA Artist Wallet: [0x6A7E35fE807Dd2C00DF3A915eDAFF42896005da1](https://etherscan.io/address/0x6A7E35fE807Dd2C00DF3A915eDAFF42896005da1)
