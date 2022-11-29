@@ -16,6 +16,7 @@
 - Meta History 5 (MH5) *(fifth drop)*: [0x926a0D777CA847Ec944f5587C34d93CB837da1ae](https://etherscan.io/address/0x926a0D777CA847Ec944f5587C34d93CB837da1ae)
 - The Revival Project by Depositphotos (RPD): [0x345be8f46Af5E5358CC4B26c82bFCdCF6e4D7BF0](https://etherscan.io/address/0x345be8f46Af5E5358CC4B26c82bFCdCF6e4D7BF0)
 - Incredible Rooster (IR): [0x1479Ca767cCA9DcF07E82f93aa34d13d62Ab053f](https://etherscan.io/address/0x1479Ca767cCA9DcF07E82f93aa34d13d62Ab053f)
+- VESA and ZINAIDA Charity Fine Art Collection by META HISTORY (VZMH): [0x21b18364Ab33e035a2861a3Ddbeabc78B3b46027](https://etherscan.io/address/0x21b18364Ab33e035a2861a3Ddbeabc78B3b46027)
 
 ### Auctions
 
@@ -29,6 +30,8 @@
 
 - WithdrawSplitter (40/75 to Ukraine and 35/75 to artists): [0x69492b0069d1d6987e38382Be9Ac5bE46A6B49fc](https://etherscan.io/address/0x69492b0069d1d6987e38382be9ac5be46a6b49fc)
 - AirdropBatchSeller (for 1st and 2nd drops): [0x616d0343c6283B8fd7825e25122e65B72560853B](https://etherscan.io/address/0x616d0343c6283B8fd7825e25122e65B72560853B)
+- WithdrawSplitterV2 (80%/10%/10% - Culture/VESA/MetaHistory): [0x85d2541B059c7Fa569e09DC5b5011C881Ed172A0](https://etherscan.io/address/0x85d2541B059c7Fa569e09DC5b5011C881Ed172A0)
+- WithdrawSplitterV2 (80%/10%/10% - Culture/ZINAIDA/MetaHistory): [0x4d09b700C92BD40bD43ba37e5905443e0aFC39CC](https://etherscan.io/address/0x4d09b700C92BD40bD43ba37e5905443e0aFC39CC)
 
 ## Wallets
 
