@@ -18,6 +18,7 @@
 - Incredible Rooster (IR): [0x1479Ca767cCA9DcF07E82f93aa34d13d62Ab053f](https://etherscan.io/address/0x1479Ca767cCA9DcF07E82f93aa34d13d62Ab053f)
 - VESA and ZINAIDA Charity Fine Art Collection by META HISTORY (VZMH): [0x21b18364Ab33e035a2861a3Ddbeabc78B3b46027](https://etherscan.io/address/0x21b18364Ab33e035a2861a3Ddbeabc78B3b46027)
 - Meta History 6 (MH6) *(sixth drop)*: [0x7982649234E992506F72CE5d4C3C39BaA299cFd6](https://etherscan.io/address/0x7982649234E992506F72CE5d4C3C39BaA299cFd6)
+- Meta History 7 (MH7) *(seventh drop)*: [0xB86AD90302680EB75A860a6F4bb4cba5349c4D28](https://etherscan.io/address/0xB86AD90302680EB75A860a6F4bb4cba5349c4D28)
 
 ### Auctions
 
