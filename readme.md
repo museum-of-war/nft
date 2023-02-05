@@ -54,6 +54,7 @@ https://goerlifaucet.com/  - charge your account with virtual eth for gas on Goe
 
 ## Testing SelectiveDropMHv2
 
+After create brownie test account add money via https://goerlifaucet.com/ by specifying public address
 Make sure that `scripts/deploy_drop.py` script has propper params
 use `brownie run deploy_drop --network goerli` to deploy to the testnet
 
