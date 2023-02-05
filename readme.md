@@ -61,7 +61,7 @@ use `brownie run deploy_drop --network goerli` to deploy to the testnet
 `from brownie import SelectiveDropMHv2`
 `contract = SelectiveDropMHv2.at("0x84998969952a0d9910D581417044139847D168C7")` # with new contract deployed address
 `owner = accounts.load('testnet2')` # or whichever local name you have an account with
-`contract.airdrop(list(range(1, 50), owner, {from: owner}) ` // to aidrop to your account nfts
+`contract.airdrop(list(range(1, 51), owner, {from: owner}) ` // to aidrop to your account nfts, currently airdrops 50
 
 ## Docs
 
