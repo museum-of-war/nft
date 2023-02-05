@@ -1,6 +1,6 @@
 # Brownie configuration file
 # https://eth-brownie.readthedocs.io/en/stable/config.html
-
+dotenv: .env 
 networks:
     default: development
 
